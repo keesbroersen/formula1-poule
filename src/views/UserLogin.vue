@@ -18,8 +18,7 @@ const errMsg = ref();
 const login = () => {
   const auth = getAuth();
   signInWithEmailAndPassword(auth, email.value, password.value)
-    .then((data) => {
-      console.log("Successfully logged in!", { data });
+    .then(() => {
       router.push("/");
     })
     .catch((error) => {

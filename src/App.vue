@@ -1,6 +1,8 @@
 <template>
   <MainNavigation />
-  <router-view />
+  <Suspense>
+    <router-view />
+  </Suspense>
 </template>
 
 <script>
