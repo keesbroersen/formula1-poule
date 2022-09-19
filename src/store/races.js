@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import firebaseApp from "@/services/firebase";
 
 export const useRaces = defineStore("races", {
   state: () => ({
@@ -9,14 +11,19 @@ export const useRaces = defineStore("races", {
   }),
   getters: {
     upcomingRaces(state) {
-      return state.races.filter((todo) => todo.isFinished);
+      const nowInSeconds = new Date().getTime() / 1000;
+      return state.races.filter(
+        (race) => race.dates.race.seconds > nowInSeconds
+      );
     },
     previousRaces(state) {
-      return state.races.filter((todo) => !todo.isFinished);
+      const nowInSeconds = new Date().getTime() / 1000;
+      return state.races.filter(
+        (race) => race.dates.race.seconds <= nowInSeconds
+      );
     },
-    filteredRaces(state) {
+    filteredRaces() {
       if (this.filter === "upcoming") {
-        // call other getters with autocompletion ✨
         return this.upcomingRaces;
       } else if (this.filter === "previous") {
         return this.previousRaces;
@@ -25,6 +32,17 @@ export const useRaces = defineStore("races", {
     },
   },
   actions: {
-    getRaces() {},
+    async getRaces() {
+      this.races = [];
+      const db = getFirestore(firebaseApp);
+      const colRef = collection(db, "races");
+      const docs = await getDocs(colRef);
+      docs.forEach((doc) => {
+        this.races.push(doc.data());
+      });
+    },
+    setFilter(filter) {
+      this.filter = filter;
+    },
   },
 });
