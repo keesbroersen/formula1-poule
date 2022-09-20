@@ -2,11 +2,8 @@
   <div class="page--poule">Poule</div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "UserPoule",
-  props: {
-    msg: String,
-  },
 };
 </script>

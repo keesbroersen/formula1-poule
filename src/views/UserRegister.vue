@@ -5,7 +5,7 @@
   <p><button @click="register">Submit</button></p>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "vue-router";
@@ -19,7 +19,7 @@ const register = () => {
       router.push("/");
     })
     .catch((error) => {
-      console.log(error.code);
+      console.warn(error.code);
       alert(error.message);
     });
 };

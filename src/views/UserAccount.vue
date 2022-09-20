@@ -2,11 +2,8 @@
   <div class="page--account">Account</div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "UserAccount",
-  props: {
-    msg: String,
-  },
 };
 </script>

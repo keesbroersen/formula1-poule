@@ -5,12 +5,16 @@
   </Suspense>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
 import MainNavigation from "./components/MainNavigation.vue";
-export default {
+
+export default defineComponent({
   name: "App",
-  components: { MainNavigation },
-};
+  components: {
+    MainNavigation,
+  },
+});
 </script>
 
 <style>

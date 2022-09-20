@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRaces } from "@/store/races";
 const raceStore = useRaces();
 raceStore.getRaces();

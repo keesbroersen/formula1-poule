@@ -4,13 +4,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import RaceList from "@/components/RaceList.vue";
 export default {
   name: "UserHome",
-  props: {
-    msg: String,
-  },
   components: { RaceList },
 };
 </script>
