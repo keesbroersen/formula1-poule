@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
 import firebaseApp from "@/services/firebase";
 import { Race } from "@/models/race.model"
+
+const db = getFirestore(firebaseApp);
+const raceCollection = collection(db, "races");
 
 export const useRaces = defineStore("races", {
   state: () => {
@@ -35,13 +38,18 @@ export const useRaces = defineStore("races", {
   actions: {
     async getRaces() {
       this.races = [];
-      const db = getFirestore(firebaseApp);
-      const colRef = collection(db, "races");
-      const docs = await getDocs(colRef);
+      const docs = await getDocs(raceCollection);
       docs.forEach((doc) => {
         const data = doc.data();
         this.races.push(data as Race);
       });
+    },
+    async addRace(race: Race){
+      try {
+        await addDoc(raceCollection, race);
+      } catch (error) {
+        alert(error);
+      } 
     },
     setFilter(filter: string) {
       this.filter = filter;

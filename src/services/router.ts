@@ -33,6 +33,30 @@ const router = createRouter({
       path: "/login",
       component: () => import("../views/UserLogin.vue"),
     },
+    {
+      path: "/admin",
+      component: () => import("../views/admin/AdminHome.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true
+      },
+    },
+    {
+      path: "/admin/races",
+      component: () => import("../views/admin/AdminRaces.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true
+      },
+    },
+    {
+      path: "/admin/races/new",
+      component: () => import("../views/admin/AdminRaceNew.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true
+      },
+    },
   ],
 });
 

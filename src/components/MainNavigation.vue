@@ -1,8 +1,9 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/account">Account</router-link> |
+  <nav class="main-navigation container">
     <span v-if="isLoggedIn">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/account">Account</router-link> |
+      <router-link to="/admin">Admin</router-link> |
       <button @click="logout">Logout</button>
     </span>
     <span v-else>
@@ -32,3 +33,15 @@ const logout = () => {
   router.push("/login");
 };
 </script>
+
+<style>
+.main-navigation {
+  position: fixed;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+</style>
