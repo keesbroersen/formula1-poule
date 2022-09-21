@@ -1,7 +1,7 @@
 <template>
   <div class="page--regular">
     <router-link to="/admin/races/new" class="button">New Race</router-link>
-    <RaceList />
+    <RaceList adminPage />
   </div>
 </template>
 

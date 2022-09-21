@@ -57,6 +57,14 @@ const router = createRouter({
         requiresAdmin: true
       },
     },
+    {
+      path: "/admin/races/:slug",
+      component: () => import("../views/admin/AdminRace.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true
+      },
+    },
   ],
 });
 
