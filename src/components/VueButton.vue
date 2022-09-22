@@ -21,10 +21,6 @@
   font-size: 18px;
 }
 
-.button + .button {
-  margin-top: 8px;
-}
-
 .button svg {
   margin-right: 8px;
 }

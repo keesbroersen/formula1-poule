@@ -51,7 +51,7 @@ const router = createRouter({
     },
     {
       path: "/admin/races/new",
-      component: () => import("../views/admin/AdminRaceNew.vue"),
+      component: () => import("../views/admin/AdminRace.vue"),
       meta: {
         requiresAuth: true,
         requiresAdmin: true
@@ -63,6 +63,13 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         requiresAdmin: true
+      },
+    },
+    {
+      path: "/races/:slug",
+      component: () => import("../views/RaceDetail.vue"),
+      meta: {
+        requiresAuth: true
       },
     },
   ],
