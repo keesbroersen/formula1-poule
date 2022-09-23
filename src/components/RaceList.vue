@@ -1,16 +1,14 @@
 <template>
+  <ListHeader>
+    <SelectButton :options="selectOptions" @change="onChange" />
+  </ListHeader>
   <div class="race-list">
-    <div class="race-list__filters">
-      <VueButton @click="raceStore.setFilter('all')">All</VueButton>
-      <VueButton @click="raceStore.setFilter('upcoming')">Upcoming</VueButton>
-      <VueButton @click="raceStore.setFilter('previous')">Previous</VueButton>
-    </div>
     <div class="race-list__content">
       <RaceListItem
         v-for="(race, index) in raceStore.filteredRaces"
-        :key="index"
+        :key="race.id"
         :race="race"
-        :is-highlighted="index === 0"
+        :is-highlighted="index === 0 && optionValue === 'upcoming'"
       />
     </div>
   </div>
@@ -18,21 +16,52 @@
 
 <script setup lang="ts">
 import { useRaces } from "@/store/races";
-import VueButton from "@/elements/VueButton.vue";
 import RaceListItem from "./RaceListItem.vue";
+import SelectButton from "@/elements/SelectButton.vue";
+import { ref } from "vue";
+import ListHeader from "./ListHeader.vue";
 
 const raceStore = useRaces();
 raceStore.getRaces();
+
+const selectOptions = [
+  {
+    label: "Aankomende races",
+    value: "upcoming",
+  },
+  {
+    label: "Afgelopen races",
+    value: "completed",
+  },
+  {
+    label: "Alle races",
+    value: "all",
+  },
+];
+
+const optionValue = ref("upcoming");
+const onChange = (value: string) => {
+  optionValue.value = value;
+  raceStore.setFilter(value);
+};
 </script>
 
-<style scoped>
-.race-list__filters {
-  display: flex;
-  margin-top: 8px;
-  gap: 8px;
-}
-.race-list__content {
+<style scoped lang="scss">
+.race-list {
   display: flex;
   flex-direction: column;
+  border-top: 1px solid var(--background-opacity);
+  padding-bottom: 32px;
+  width: 100%;
+
+  &__filters {
+    display: flex;
+    margin-top: 8px;
+    gap: 8px;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>

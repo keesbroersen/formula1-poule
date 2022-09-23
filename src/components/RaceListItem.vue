@@ -5,10 +5,12 @@
     :to="`races/${race.slug}`"
   >
     <CountryFlag :countryCode="race.countryCode" />
+
     <div class="race__header">
       <p class="title">{{ race.circuit }} - {{ race.country }}</p>
       <p class="date">{{ dateTimeFormatted }}</p>
     </div>
+
     <div class="race__footer" v-if="isHighlighted">
       score
       <p class="next-session">{{ dateUntilNow }}</p>
