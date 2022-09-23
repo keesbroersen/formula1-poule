@@ -1,36 +1,53 @@
 <template>
-  <div class="page--regular">
+  <div class="page--regular container">
     <h2>{{ race?.circuit }}</h2>
-    <form @submit.prevent="submit">
-      <label>
-        <input type="text" v-model="circuit" />
+    <form @submit.prevent="submit" class="form">
+      <InputField type="text">
+        <input type="text" v-model="circuit" placeholder=" " />
         <span>Circuit</span>
-      </label>
-      <label>
-        <input type="text" v-model="country" />
+      </InputField>
+      <InputField type="text">
+        <input type="text" v-model="country" placeholder=" " />
         <span>Country</span>
-      </label>
-      <label>
-        <input type="text" v-model="countryCode" />
+      </InputField>
+      <InputField type="text">
+        <input type="text" v-model="countryCode" placeholder=" " />
         <span>Country code</span>
-      </label>
-      <label>
-        <input type="date" v-model="qualificationDateTime.date" />
-        <input type="time" v-model="qualificationDateTime.time" />
-        <span>Qualification</span>
-      </label>
-      <label>
-        <input type="date" v-model="raceDateTime.date" />
-        <input type="time" v-model="raceDateTime.time" />
-        <span>Race</span>
-      </label>
-      <label>
-        <input type="checkbox" :v-model="isSprintRace" />
-        <span>Is spint race</span>
-      </label>
-      <VueButton>{{ race ? "Edit" : "Add" }} race</VueButton>
+      </InputField>
+      <InputField type="date">
+        <input
+          type="date"
+          v-model="qualificationDateTime.date"
+          placeholder=" "
+        />
+        <span>Qualification date</span>
+      </InputField>
+      <InputField type="time">
+        <input
+          type="time"
+          v-model="qualificationDateTime.time"
+          placeholder=" "
+        />
+        <span>Qualification time</span>
+      </InputField>
+      <InputField type="date">
+        <input type="date" v-model="raceDateTime.date" placeholder=" " />
+        <span>Race date</span>
+      </InputField>
+      <InputField type="time">
+        <input type="time" v-model="raceDateTime.time" placeholder=" " />
+        <span>Race time</span>
+      </InputField>
+      <InputField type="checkbox">
+        <input type="checkbox" v-model="isSprintRace" placeholder=" " />
+        <span>Is sprint race</span>
+      </InputField>
+
+      <VueButton type="primary">{{ race ? "Edit" : "Add" }} race</VueButton>
     </form>
-    <VueButton @click="removeRace" v-if="race">Delete race</VueButton>
+    <StickyBlock>
+      <VueButton @click="removeRace" v-if="race">Delete race</VueButton>
+    </StickyBlock>
   </div>
 </template>
 
@@ -40,6 +57,8 @@ import { useRaces } from "@/store/races";
 import VueButton from "@/elements/VueButton.vue";
 import { computed, ref, reactive } from "vue";
 import { Timestamp } from "@firebase/firestore";
+import StickyBlock from "@/elements/StickyBlock.vue";
+import InputField from "@/elements/InputField.vue";
 
 const route = useRoute();
 const raceSlug = route.params.slug as String;
@@ -51,7 +70,7 @@ const country = ref(race?.country || "");
 const countryCode = ref(race?.countryCode || "");
 const qualificationDate = ref(race?.dates?.qualification.toDate());
 const raceDate = ref(race?.dates?.race.toDate());
-const isSprintRace = ref(race?.isSprintRace || false);
+const isSprintRace = ref<Boolean>(race?.isSprintRace || false);
 
 const padTo2Digits = (num: Number) => {
   return num.toString().padStart(2, "0");
@@ -127,10 +146,3 @@ const removeRace = () => {
   raceStore.removeRace(race);
 };
 </script>
-
-<style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-}
-</style>

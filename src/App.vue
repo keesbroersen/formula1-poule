@@ -17,7 +17,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap");
 
 * {
@@ -51,10 +51,10 @@ body {
 a {
   color: white;
   text-decoration: none;
-}
 
-a span {
-  color: var(--general-opacity);
+  span {
+    color: var(--general-opacity);
+  }
 }
 
 [class*="page--"] {
@@ -63,33 +63,35 @@ a span {
   min-height: 100vh;
 }
 
-.page--regular {
-  padding-top: 100px;
-  background: linear-gradient(
-    160deg,
-    var(--background-red) 0,
-    var(--background-black) 80vh
-  );
-}
+.page {
+  &--regular {
+    padding-top: 100px;
+    background: linear-gradient(
+      160deg,
+      var(--background-red) 0,
+      var(--background-black) 80vh
+    );
+  }
 
-.page--with-fixed-button {
-  padding-bottom: 74px;
-}
+  &--with-fixed-button {
+    padding-bottom: 74px;
+  }
 
-.page--race {
-  padding: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(2, 1, 1, 0.6) 0%,
-    rgba(2, 1, 1, 0) 60px,
-    rgba(38, 38, 38, 0) 25vw,
-    rgba(38, 38, 38, 1) 48vw,
-    rgba(0, 0, 0, 1) 50vh
-  );
-}
+  &--race {
+    padding: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(2, 1, 1, 0.6) 0%,
+      rgba(2, 1, 1, 0) 60px,
+      rgba(38, 38, 38, 0) 25vw,
+      rgba(38, 38, 38, 1) 48vw,
+      rgba(0, 0, 0, 1) 50vh
+    );
+  }
 
-.page--result {
-  padding: 100px 0 0;
+  &--result {
+    padding: 100px 0 0;
+  }
 }
 
 .container {
@@ -124,10 +126,67 @@ input[type="color"] {
   -webkit-appearance: none;
   border: none;
 }
+
 input[type="color"]::-webkit-color-swatch-wrapper {
   padding: 0;
 }
+
 input[type="color"]::-webkit-color-swatch {
   border: none;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  min-height: 50px;
+  width: 100%;
+  background: var(--background-opacity);
+  color: #fff;
+  line-height: 1;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 18px;
+
+  &--primary,
+  &--sticky &--form {
+    background: #fff;
+    color: #000;
+  }
+
+  &--sticky {
+    position: fixed;
+    left: 12px;
+    bottom: 12px;
+    width: calc(100vw - 24px);
+  }
+
+  &--form {
+    margin: 12px;
+    width: calc(100vw - 24px);
+  }
+}
+
+.button svg {
+  margin-right: 8px;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 </style>
