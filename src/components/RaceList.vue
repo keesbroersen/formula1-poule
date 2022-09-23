@@ -10,6 +10,7 @@
         v-for="(race, index) in raceStore.filteredRaces"
         :key="index"
         :race="race"
+        :is-highlighted="index === 0"
       />
     </div>
   </div>
@@ -17,7 +18,7 @@
 
 <script setup lang="ts">
 import { useRaces } from "@/store/races";
-import VueButton from "./VueButton.vue";
+import VueButton from "@/elements/VueButton.vue";
 import RaceListItem from "./RaceListItem.vue";
 
 const raceStore = useRaces();
@@ -33,6 +34,5 @@ raceStore.getRaces();
 .race-list__content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="page--home">
+  <div class="page--regular">
     <RaceList />
   </div>
 </template>

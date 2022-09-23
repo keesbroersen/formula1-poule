@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useRaces } from "@/store/races";
-import VueButton from "@/components/VueButton.vue";
+import VueButton from "@/elements/VueButton.vue";
 import { computed, ref, reactive } from "vue";
 import { Timestamp } from "@firebase/firestore";
 
