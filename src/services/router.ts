@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getUser } from "./firebase";
+import { useRaces } from "@/store/races";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,7 +39,7 @@ const router = createRouter({
       component: () => import("../views/admin/AdminHome.vue"),
       meta: {
         requiresAuth: true,
-        requiresAdmin: true
+        requiresAdmin: true,
       },
     },
     {
@@ -46,7 +47,7 @@ const router = createRouter({
       component: () => import("../views/admin/AdminRaces.vue"),
       meta: {
         requiresAuth: true,
-        requiresAdmin: true
+        requiresAdmin: true,
       },
     },
     {
@@ -54,7 +55,11 @@ const router = createRouter({
       component: () => import("../views/admin/AdminRace.vue"),
       meta: {
         requiresAuth: true,
-        requiresAdmin: true
+        requiresAdmin: true,
+      },
+      beforeEnter(to) {
+        const raceStore = useRaces();
+        raceStore.clearCurrentRace();
       },
     },
     {
@@ -62,14 +67,66 @@ const router = createRouter({
       component: () => import("../views/admin/AdminRace.vue"),
       meta: {
         requiresAuth: true,
-        requiresAdmin: true
+        requiresAdmin: true,
+      },
+      beforeEnter(to) {
+        const raceStore = useRaces();
+        raceStore.setCurrentRace(to.params.slug as string);
+      },
+    },
+    {
+      path: "/admin/teams",
+      component: () => import("../views/admin/AdminTeams.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+      },
+    },
+    {
+      path: "/admin/teams/new",
+      component: () => import("../views/admin/AdminTeam.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+      },
+    },
+    {
+      path: "/admin/drivers/:slug",
+      component: () => import("../views/admin/AdminDriver.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+      },
+    },
+    {
+      path: "/admin/drivers",
+      component: () => import("../views/admin/AdminDrivers.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+      },
+    },
+    {
+      path: "/admin/drivers/new",
+      component: () => import("../views/admin/AdminDriver.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+      },
+    },
+    {
+      path: "/admin/teams/:slug",
+      component: () => import("../views/admin/AdminTeam.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
       },
     },
     {
       path: "/races/:slug",
       component: () => import("../views/RaceDetail.vue"),
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
       },
     },
   ],

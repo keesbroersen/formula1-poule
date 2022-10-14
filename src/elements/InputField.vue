@@ -75,7 +75,7 @@ const props = defineProps({
     );
   }
 
-  &--color input {
+  &--color input[type="color"] {
     padding: 0;
   }
 

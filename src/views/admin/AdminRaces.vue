@@ -3,7 +3,7 @@
     <RaceList />
     <StickyBlock>
       <router-link to="/admin/races/new" class="button button--primary"
-        >New Race</router-link
+        >Nieuwe Race</router-link
       >
     </StickyBlock>
   </div>

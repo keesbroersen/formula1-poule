@@ -14,8 +14,8 @@
 import { defineProps, defineEmits, PropType } from "vue";
 
 interface Option {
-  value: string;
-  label: string;
+  value: string | undefined;
+  label: string | undefined;
 }
 
 const props = defineProps({
@@ -33,6 +33,7 @@ const onChange = (event: Event) => {
 <style>
 .select {
   -webkit-appearance: none;
+  appearance: none;
   border: none;
   height: 32px;
   max-width: 300px;

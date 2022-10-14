@@ -1,76 +1,73 @@
 <template>
-  <div class="page--regular container">
-    <h2>{{ race?.circuit }}</h2>
+  <div class="page--regular container" v-if="currentRace">
+    <h2>{{ currentRace.circuit }}</h2>
     <form @submit.prevent="submit" class="form">
       <InputField type="text">
-        <input type="text" v-model="circuit" placeholder=" " />
+        <input type="text" v-model="currentRace.circuit" placeholder=" " />
         <span>Circuit</span>
       </InputField>
       <InputField type="text">
-        <input type="text" v-model="country" placeholder=" " />
-        <span>Country</span>
+        <input type="text" v-model="currentRace.country" placeholder=" " />
+        <span>Land</span>
       </InputField>
       <InputField type="text">
-        <input type="text" v-model="countryCode" placeholder=" " />
-        <span>Country code</span>
+        <input type="text" v-model="currentRace.countryCode" placeholder=" " />
+        <span>Landcode</span>
       </InputField>
       <InputField type="date">
-        <input
-          type="date"
-          v-model="qualificationDateTime.date"
-          placeholder=" "
-        />
-        <span>Qualification date</span>
+        <input type="date" v-model="qualificationDate" placeholder=" " />
+        <span>Qualificatie datum</span>
       </InputField>
       <InputField type="time">
-        <input
-          type="time"
-          v-model="qualificationDateTime.time"
-          placeholder=" "
-        />
-        <span>Qualification time</span>
+        <input type="time" v-model="qualificationTime" placeholder=" " />
+        <span>Qualificatie tijdstip</span>
       </InputField>
       <InputField type="date">
-        <input type="date" v-model="raceDateTime.date" placeholder=" " />
-        <span>Race date</span>
+        <input type="date" v-model="raceDate" placeholder=" " />
+        <span>Race datum</span>
       </InputField>
       <InputField type="time">
-        <input type="time" v-model="raceDateTime.time" placeholder=" " />
-        <span>Race time</span>
+        <input type="time" v-model="raceTime" placeholder=" " />
+        <span>Race tijdstip</span>
       </InputField>
       <InputField type="checkbox">
-        <input type="checkbox" v-model="isSprintRace" placeholder=" " />
-        <span>Is sprint race</span>
+        <input
+          type="checkbox"
+          v-model="currentRace.isSprintRace"
+          placeholder=" "
+        />
+        <span>Is sprintrace</span>
       </InputField>
 
-      <VueButton type="primary">{{ race ? "Edit" : "Add" }} race</VueButton>
+      <ErrorMessage :error="error" />
+
+      <VueButton :type="submitting ? 'loading' : 'primary'"
+        >Race {{ currentRace.id ? "aanpassen" : "toevoegen" }}</VueButton
+      >
     </form>
     <StickyBlock>
-      <VueButton @click="removeRace" v-if="race">Delete race</VueButton>
+      <VueButton @click="removeRace" v-if="currentRace"
+        >Race verwijderen</VueButton
+      >
     </StickyBlock>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+import { storeToRefs } from "pinia";
 import { useRaces } from "@/store/races";
 import VueButton from "@/elements/VueButton.vue";
-import { computed, ref, reactive } from "vue";
+import { computed, ref } from "vue";
 import { Timestamp } from "@firebase/firestore";
 import StickyBlock from "@/elements/StickyBlock.vue";
 import InputField from "@/elements/InputField.vue";
+import { RaceDates } from "@/models/race.model";
+import ErrorMessage from "../../elements/ErrorMessage.vue";
 
-const route = useRoute();
-const raceSlug = route.params.slug as String;
 const raceStore = useRaces();
-const race = raceStore.getRaceBySlug(raceSlug);
-
-const circuit = ref(race?.circuit || "");
-const country = ref(race?.country || "");
-const countryCode = ref(race?.countryCode || "");
-const qualificationDate = ref(race?.dates?.qualification.toDate());
-const raceDate = ref(race?.dates?.race.toDate());
-const isSprintRace = ref<Boolean>(race?.isSprintRace || false);
+const { currentRace } = storeToRefs(raceStore);
+const submitting = ref(false);
+const error = ref();
 
 const padTo2Digits = (num: Number) => {
   return num.toString().padStart(2, "0");
@@ -90,59 +87,59 @@ const formatTime = (date = new Date()) => {
   );
 };
 
-const qualificationDateTime = reactive({
-  date: formatDate(qualificationDate.value as Date),
-  time: formatTime(qualificationDate.value as Date),
+if (!currentRace.value.dates) currentRace.value.dates = {} as RaceDates;
+
+const qualificationTime = computed({
+  get: () =>
+    formatTime(currentRace?.value.dates?.qualification?.toDate() as Date),
+  set: (value) => {
+    const date = new Date(`${qualificationDate.value}T${value}:00`);
+    currentRace.value.dates.qualification = Timestamp.fromDate(date);
+  },
 });
 
-const raceDateTime = reactive({
-  date: formatDate(raceDate.value as Date),
-  time: formatTime(raceDate.value as Date),
+const qualificationDate = computed({
+  get: () =>
+    formatDate(currentRace?.value.dates?.qualification?.toDate() as Date),
+  set: (value) => {
+    const date = new Date(`${value}T${qualificationTime.value}:00`);
+    currentRace.value.dates.qualification = Timestamp.fromDate(date);
+  },
 });
 
-const qualificationTime = computed(() => {
-  const date = new Date(
-    `${qualificationDateTime.date}T${qualificationDateTime.time}:00`
-  );
-  return Timestamp.fromDate(date);
+const raceTime = computed({
+  get: () => formatTime(currentRace?.value.dates?.race?.toDate() as Date),
+  set: (value) => {
+    const date = new Date(`${raceDate.value}T${value}:00`);
+    currentRace.value.dates.race = Timestamp.fromDate(date);
+  },
 });
 
-const raceTime = computed(() => {
-  const date = new Date(`${raceDateTime.date}T${raceDateTime.time}:00`);
-  return Timestamp.fromDate(date);
+const raceDate = computed({
+  get: () => formatDate(currentRace?.value.dates?.race?.toDate() as Date),
+  set: (value) => {
+    const date = new Date(`${value}T${raceTime.value}:00`);
+    currentRace.value.dates.race = Timestamp.fromDate(date);
+  },
 });
 
-const slug = computed(() => {
-  return circuit.value
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-});
+const submit = async () => {
+  submitting.value = true;
+  error.value = null;
 
-const submit = () => {
-  const payload = {
-    ...race,
-    circuit: circuit.value,
-    country: country.value,
-    countryCode: countryCode.value,
-    dates: {
-      qualification: qualificationTime.value,
-      race: raceTime.value,
-    },
-    isSprintRace: isSprintRace.value,
-    slug: slug.value,
-  };
-  console.log({ payload });
-  if (race) {
-    return raceStore.updateRace(payload);
+  try {
+    if (currentRace.value.id) {
+      return await raceStore.updateRace();
+    }
+    return await raceStore.addRace();
+  } catch (err) {
+    submitting.value = false;
+    error.value = err;
   }
-  return raceStore.addRace(payload);
 };
 
 const removeRace = () => {
-  if (!race) return;
-  raceStore.removeRace(race);
+  if (!currentRace) return;
+  raceStore.removeRace(currentRace.value);
 };
 </script>

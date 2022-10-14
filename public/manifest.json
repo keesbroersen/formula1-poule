@@ -1,0 +1,11 @@
+{
+  "name": "F1 Poule",
+  "short_name": "F1Poule",
+  "icons": [{
+      "src": "google-touch-icon.png",
+      "sizes": "512x512"
+  }],
+  "background_color": "#000",
+  "theme_color": "#cf4a4a",
+  "display": "fullscreen"
+}

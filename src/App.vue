@@ -5,25 +5,19 @@
   </Suspense>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import MainNavigation from "./components/MainNavigation.vue";
+import { useTeams } from "@/store/teams";
+import { useDrivers } from "@/store/drivers";
+import { useRaces } from "@/store/races";
 
-export default defineComponent({
-  name: "App",
-  components: {
-    MainNavigation,
-  },
-});
+useTeams().getTeams();
+useDrivers().getDrivers();
+useRaces().getRaces();
 </script>
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
-}
 
 :root {
   --background-red: #cf4a4a;
@@ -118,12 +112,14 @@ a {
 
 button {
   -webkit-appearance: none;
+  appearance: none;
   border: none;
   box-shadow: none;
 }
 
 input[type="color"] {
   -webkit-appearance: none;
+  appearance: none;
   border: none;
 }
 
@@ -147,6 +143,7 @@ input[type="color"]::-webkit-color-swatch {
   line-height: 1;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   border-radius: 5px;
   cursor: pointer;
   font-family: var(--font);
@@ -181,6 +178,13 @@ input[type="color"]::-webkit-color-swatch {
 
 .button:active {
   transform: translateY(1px);
+}
+
+.button:disabled {
+  cursor: initial;
+  opacity: 1;
+  transform: none;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .form {

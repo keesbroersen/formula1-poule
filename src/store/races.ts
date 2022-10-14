@@ -1,28 +1,39 @@
 import { defineStore } from "pinia";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 import firebaseApp from "@/services/firebase";
-import { Race } from "@/models/race.model"
+import { Race } from "@/models/race.model";
 import moment from "moment";
+import router from "@/services/router";
 
 const db = getFirestore(firebaseApp);
-const raceCollection = collection(db, "races");
+const db_col = collection(db, "races");
 
 export const useRaces = defineStore("races", {
   state: () => {
     return {
       races: [] as Race[],
-      filter: "upcoming"
-    }
+      filter: "upcoming",
+      currentRace: {} as Race,
+      racesLoading: true,
+    };
   },
   getters: {
     upcomingRaces(state): Race[] {
-      return state.races.filter(
-        (race) => moment(race.dates.race.toDate()).isSameOrAfter(new Date(), 'day')
+      return state.races.filter((race) =>
+        moment(race.dates.race.toDate()).isSameOrAfter(new Date(), "day")
       );
     },
     completedRaces(state): Race[] {
-      return state.races.filter(
-        (race) => moment(race.dates.race.toDate()).isBefore(new Date(), 'day')
+      return state.races.filter((race) =>
+        moment(race.dates.race.toDate()).isBefore(new Date(), "day")
       );
     },
     filteredRaces(): Race[] {
@@ -34,42 +45,66 @@ export const useRaces = defineStore("races", {
       return this.races;
     },
     getRaceBySlug: (state) => {
-      return (slug: String) => state.races.find(race => race.slug === slug)
-    }
+      return (slug: String) => state.races.find((race) => race.slug === slug);
+    },
+    getSlug: (state): string | null => {
+      if (!state.currentRace?.circuit) return null;
+      return state.currentRace.circuit
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    },
   },
   actions: {
     async getRaces() {
       this.races = [];
-      const docs = await getDocs(raceCollection);
+      const docs = await getDocs(db_col);
       docs.forEach((doc) => {
         const data = doc.data();
         data.id = doc.id;
+        if (this.races.find((race) => race.id === doc.id)) return;
         this.races.push(data as Race);
       });
+      this.racesLoading = false;
     },
-    async addRace(race: Race){
-      try {
-        await addDoc(raceCollection, race);
-      } catch (error) {
-        alert(error);
-      } 
+    async addRace() {
+      await addDoc(db_col, { ...this.currentRace, slug: this.getSlug })
+        .then(() => router.push({ path: "/admin/races" }))
+        .catch((error) => {
+          throw error;
+        });
     },
-    async updateRace(race: Race){
-      try {
-        await updateDoc(doc(raceCollection, race.id), {...race}).then(result => console.log({result}));
-      } catch (error) {
-        alert(error);
-      } 
+    async updateRace() {
+      return updateDoc(doc(db_col, this.currentRace.id + "gre"), {
+        ...this.currentRace,
+        slug: this.getSlug,
+      })
+        .then(() => router.push({ path: "/admin/races" }))
+        .catch((error) => {
+          throw error;
+        });
     },
-    async removeRace(race: Race){
-      try {
-        await deleteDoc(doc(raceCollection, race.id))
-      } catch (error) {
-        alert(error);
-      } 
+    async removeRace(race: Race) {
+      await deleteDoc(doc(db_col, race.id))
+        .then(() => router.push({ path: "/admin/races" }))
+        .catch((error) => {
+          throw error;
+        });
     },
     setFilter(filter: string) {
       this.filter = filter;
+    },
+    async setCurrentRace(slug: string) {
+      // Wait until races are loaded
+      while (this.racesLoading) {
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+      this.currentRace = this.getRaceBySlug(slug) as Race;
+    },
+    clearCurrentRace() {
+      this.currentRace = {} as Race;
     },
   },
 });
