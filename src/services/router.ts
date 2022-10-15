@@ -93,7 +93,7 @@ const router = createRouter({
       },
       beforeEnter() {
         const teamsStore = useTeams();
-        teamsStore.clearCurrent();
+        teamsStore.clearCurrentTeam();
       },
     },
     {
@@ -105,7 +105,7 @@ const router = createRouter({
       },
       beforeEnter(to) {
         const teamsStore = useTeams();
-        teamsStore.setCurrent(to.params.slug as string);
+        teamsStore.setCurrentTeam(to.params.slug as string);
       },
     },
     {

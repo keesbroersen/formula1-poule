@@ -39,13 +39,13 @@ const { currentTeam } = storeToRefs(store);
 
 const submit = () => {
   if (currentTeam.value.id) {
-    return store.update();
+    return store.updateTeam();
   }
-  return store.add();
+  return store.addTeam();
 };
 
 const removeTeam = () => {
   if (!currentTeam.value.id) return;
-  store.remove();
+  store.removeTeam();
 };
 </script>

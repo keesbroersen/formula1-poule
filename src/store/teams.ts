@@ -25,13 +25,13 @@ export const useTeams = defineStore("teams", {
     };
   },
   getters: {
-    getAll(): Team[] {
+    getAllTeams(): Team[] {
       return this.teams;
     },
-    getBySlug: (state) => {
+    getTeamBySlug: (state) => {
       return (slug: String) => state.teams?.find((team) => team.slug === slug);
     },
-    getById: (state) => {
+    getTeamById: (state) => {
       return (id: String) => state.teams?.find((team) => team.id === id);
     },
     getSlug: (state): string | null => {
@@ -56,14 +56,14 @@ export const useTeams = defineStore("teams", {
       });
       this.teamsLoading = false;
     },
-    async add() {
+    async addTeam() {
       await addDoc(db_col, { ...this.currentTeam, slug: this.getSlug })
         .then(() => router.push({ path: "/admin/teams" }))
         .catch((error) => {
           throw error;
         });
     },
-    async update() {
+    async updateTeam() {
       return updateDoc(doc(db_col, this.currentTeam.id), {
         ...this.currentTeam,
         slug: this.getSlug,
@@ -73,21 +73,21 @@ export const useTeams = defineStore("teams", {
           throw error;
         });
     },
-    async remove() {
+    async removeTeam() {
       await deleteDoc(doc(db_col, this.currentTeam.id))
         .then(() => router.push({ path: "/admin/teams" }))
         .catch((error) => {
           throw error;
         });
     },
-    async setCurrent(slug: string) {
+    async setCurrentTeam(slug: string) {
       // Wait until races are loaded
       while (this.teamsLoading) {
         await new Promise((resolve) => requestAnimationFrame(resolve));
       }
-      this.currentTeam = this.getBySlug(slug) as Team;
+      this.currentTeam = this.getTeamBySlug(slug) as Team;
     },
-    clearCurrent() {
+    clearCurrentTeam() {
       this.currentTeam = {} as Team;
     },
   },

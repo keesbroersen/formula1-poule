@@ -27,7 +27,7 @@ const driver = computed(() => {
 });
 
 const team = computed(() => {
-  return teamsStore.getById(driver.value.teamId);
+  return teamsStore.getTeamById(driver.value.teamId);
 });
 </script>
 
