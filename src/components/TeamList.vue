@@ -1,11 +1,7 @@
 <template>
   <div class="team-list">
     <div class="team-list__content">
-      <TeamListItem
-        v-for="team in store.allTeams"
-        :key="team.id"
-        :team="team"
-      />
+      <TeamListItem v-for="team in store.getAll" :key="team.id" :team="team" />
     </div>
   </div>
 </template>

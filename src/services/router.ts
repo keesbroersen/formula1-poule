@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { getUser } from "./firebase";
 import { useRaces } from "@/store/races";
 import { useDrivers } from "@/store/drivers";
+import { useTeams } from "@/store/teams";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -90,6 +91,22 @@ const router = createRouter({
         requiresAuth: true,
         requiresAdmin: true,
       },
+      beforeEnter() {
+        const teamsStore = useTeams();
+        teamsStore.clearCurrent();
+      },
+    },
+    {
+      path: "/admin/teams/:slug",
+      component: () => import("../views/admin/AdminTeam.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+      },
+      beforeEnter(to) {
+        const teamsStore = useTeams();
+        teamsStore.setCurrent(to.params.slug as string);
+      },
     },
     {
       path: "/admin/drivers/new",
@@ -118,14 +135,6 @@ const router = createRouter({
     {
       path: "/admin/drivers",
       component: () => import("../views/admin/AdminDrivers.vue"),
-      meta: {
-        requiresAuth: true,
-        requiresAdmin: true,
-      },
-    },
-    {
-      path: "/admin/teams/:slug",
-      component: () => import("../views/admin/AdminTeam.vue"),
       meta: {
         requiresAuth: true,
         requiresAdmin: true,
