@@ -1,27 +1,29 @@
 <template>
-  <div class="page--regular container">
-    <h2>{{ driver?.name }}</h2>
+  <div v-if="currentDriver" class="page--regular container">
+    <h2>{{ currentDriver.name }}</h2>
     <form @submit.prevent="submit" class="form">
       <InputField type="text">
-        <input type="text" v-model="name" placeholder=" " />
+        <input type="text" v-model="currentDriver.name" placeholder=" " />
         <span>Name</span>
       </InputField>
       <InputField type="text">
-        <input type="text" v-model="country" placeholder=" " />
+        <input type="text" v-model="currentDriver.country" placeholder=" " />
         <span>Country</span>
       </InputField>
-      <!--<InputField type="text">
-        <input type="text" v-model="teamId" placeholder=" " />
-        <span>Team</span>
-      </InputField>-->
-      <SelectButton :options="selectOptions" @change="onChange" />
+      <SelectButton
+        :options="selectOptions"
+        @change="onChange"
+        :selected="currentDriver.teamId"
+      />
 
-      <VueButton type="primary"
-        >Coureur {{ driver ? "aanpassen" : "toevoegen" }}</VueButton
+      <ErrorMessage :error="error" />
+
+      <VueButton :type="isSubmitting ? 'loading' : 'primary'"
+        >Coureur {{ currentDriver.id ? "aanpassen" : "toevoegen" }}</VueButton
       >
     </form>
     <StickyBlock>
-      <VueButton @click="removeDriver" v-if="driver"
+      <VueButton @click="removeDriver" v-if="currentDriver.id"
         >Verwijder coureur</VueButton
       >
     </StickyBlock>
@@ -29,66 +31,72 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
 import { useDrivers } from "@/store/drivers";
 import VueButton from "@/elements/VueButton.vue";
-import { computed, ref } from "vue";
+import { ref, watch } from "vue";
 import StickyBlock from "@/elements/StickyBlock.vue";
 import InputField from "@/elements/InputField.vue";
 import { useTeams } from "@/store/teams";
 import SelectButton from "@/elements/SelectButton.vue";
 import { Team } from "@/models/team.model";
+import { storeToRefs } from "pinia";
+import ErrorMessage from "@/elements/ErrorMessage.vue";
 
-const route = useRoute();
-const driverSlug = route.params.slug as String;
 const driverStore = useDrivers();
+const { currentDriver } = storeToRefs(driverStore);
 const teamsStore = useTeams();
-const driver = driverStore.getDriverBySlug(driverSlug);
-const teams = teamsStore.allTeams;
+const isSubmitting = ref(false);
+const isRemoving = ref(false);
+const error = ref();
+const { teams } = teamsStore;
 
-const selectOptions = teams.map((team: Team) => {
-  return {
-    value: team.id,
-    label: team.name,
-  };
-});
+const getSelectOptions = () => {
+  return teams.map((team: Team) => {
+    return {
+      value: team.id,
+      label: team.name,
+    };
+  });
+};
 
-const name = ref(driver?.name || "");
-const country = ref(driver?.country || "");
-const teamId = ref(driver?.teamId || selectOptions[0].value);
+const selectOptions = ref(getSelectOptions());
 
-const slug = computed(() => {
-  return name.value
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-});
-
-const submit = () => {
-  const payload = {
-    ...driver,
-    name: name.value,
-    country: country.value,
-    teamId: teamId.value,
-    slug: slug.value,
-  };
-
-  console.log({ payload });
-
-  if (driver) {
-    return driverStore.updateDriver(payload);
+watch(
+  () => teams.length,
+  () => {
+    selectOptions.value = getSelectOptions();
   }
-  return driverStore.addDriver(payload);
+);
+
+const submit = async () => {
+  isSubmitting.value = true;
+  error.value = null;
+
+  try {
+    if (currentDriver.value.id) {
+      return await driverStore.updateDriver();
+    }
+    return await driverStore.addDriver();
+  } catch (err) {
+    isSubmitting.value = false;
+    error.value = err;
+  }
 };
 
 const removeDriver = () => {
-  if (!driver) return;
-  driverStore.removeDriver(driver);
+  if (!currentDriver) return;
+  isRemoving.value = true;
+  error.value = null;
+
+  try {
+    driverStore.removeDriver();
+  } catch (err) {
+    isRemoving.value = false;
+    error.value = err;
+  }
 };
 
 const onChange = (value: string) => {
-  teamId.value = value;
+  currentDriver.value.teamId = value;
 };
 </script>

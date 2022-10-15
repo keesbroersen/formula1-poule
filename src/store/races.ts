@@ -77,7 +77,7 @@ export const useRaces = defineStore("races", {
         });
     },
     async updateRace() {
-      return updateDoc(doc(db_col, this.currentRace.id + "gre"), {
+      return updateDoc(doc(db_col, this.currentRace.id), {
         ...this.currentRace,
         slug: this.getSlug,
       })
@@ -86,8 +86,8 @@ export const useRaces = defineStore("races", {
           throw error;
         });
     },
-    async removeRace(race: Race) {
-      await deleteDoc(doc(db_col, race.id))
+    async removeRace() {
+      await deleteDoc(doc(db_col, this.currentRace.id))
         .then(() => router.push({ path: "/admin/races" }))
         .catch((error) => {
           throw error;

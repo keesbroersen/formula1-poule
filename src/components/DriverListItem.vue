@@ -3,20 +3,20 @@
     class="driver-list-item container"
     :to="`drivers/${driver.slug}`"
   >
-    <span
-      class="color"
-      :style="`background-color: ${driver.team?.color}`"
-    ></span>
+    <span class="color" :style="`background-color: ${team?.color}`"></span>
     {{ driver.name }}
-    <small class="country">{{ driver.country }}</small> {{ driver.team?.name }}
+    <small class="country">{{ driver.country }}</small> {{ team?.name }}
   </router-link>
 </template>
 
 <script setup lang="ts">
 import { defineProps, computed } from "vue";
 import { Driver } from "@/models/driver.model";
+import { useTeams } from "@/store/teams";
 import moment from "moment";
 moment.locale("nl");
+
+const teamsStore = useTeams();
 
 const props = defineProps<{
   driver: Driver;
@@ -24,6 +24,10 @@ const props = defineProps<{
 
 const driver = computed(() => {
   return props.driver;
+});
+
+const team = computed(() => {
+  return teamsStore.getTeamById(driver.value.teamId);
 });
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <select class="select" @change="onChange">
+  <select class="select" @change="onChange" v-model="selected">
     <option
       v-for="option in props.options"
       :key="option.value"
@@ -11,23 +11,29 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, PropType } from "vue";
+import { defineProps, defineEmits, PropType, computed } from "vue";
 
 interface Option {
   value: string | undefined;
   label: string | undefined;
 }
 
+const emits = defineEmits(["change"]);
 const props = defineProps({
   options: Array as PropType<Option[]>,
+  selected: String,
 });
 
-const emits = defineEmits(["change"]);
-
-const onChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  emits("change", target.value);
-};
+const selected = computed({
+  get: () => {
+    const value = props.selected || props.options?.[0]?.value;
+    emits("change", value);
+    return value;
+  },
+  set: (value) => {
+    emits("change", value);
+  },
+});
 </script>
 
 <style>

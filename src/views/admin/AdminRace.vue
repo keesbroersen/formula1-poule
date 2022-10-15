@@ -41,12 +41,15 @@
 
       <ErrorMessage :error="error" />
 
-      <VueButton :type="submitting ? 'loading' : 'primary'"
+      <VueButton :type="isSubmitting ? 'loading' : 'primary'"
         >Race {{ currentRace.id ? "aanpassen" : "toevoegen" }}</VueButton
       >
     </form>
     <StickyBlock>
-      <VueButton @click="removeRace" v-if="currentRace"
+      <VueButton
+        @click="removeRace"
+        v-if="currentRace"
+        :type="isRemoving ? 'loading' : 'secondary'"
         >Race verwijderen</VueButton
       >
     </StickyBlock>
@@ -66,7 +69,8 @@ import ErrorMessage from "../../elements/ErrorMessage.vue";
 
 const raceStore = useRaces();
 const { currentRace } = storeToRefs(raceStore);
-const submitting = ref(false);
+const isSubmitting = ref(false);
+const isRemoving = ref(false);
 const error = ref();
 
 const padTo2Digits = (num: Number) => {
@@ -124,7 +128,7 @@ const raceDate = computed({
 });
 
 const submit = async () => {
-  submitting.value = true;
+  isSubmitting.value = true;
   error.value = null;
 
   try {
@@ -133,13 +137,21 @@ const submit = async () => {
     }
     return await raceStore.addRace();
   } catch (err) {
-    submitting.value = false;
+    isSubmitting.value = false;
     error.value = err;
   }
 };
 
 const removeRace = () => {
   if (!currentRace) return;
-  raceStore.removeRace(currentRace.value);
+  isRemoving.value = true;
+  error.value = null;
+
+  try {
+    raceStore.removeRace();
+  } catch (err) {
+    isRemoving.value = false;
+    error.value = err;
+  }
 };
 </script>

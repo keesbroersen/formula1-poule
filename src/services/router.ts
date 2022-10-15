@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getUser } from "./firebase";
 import { useRaces } from "@/store/races";
+import { useDrivers } from "@/store/drivers";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -57,7 +58,7 @@ const router = createRouter({
         requiresAuth: true,
         requiresAdmin: true,
       },
-      beforeEnter(to) {
+      beforeEnter() {
         const raceStore = useRaces();
         raceStore.clearCurrentRace();
       },
@@ -91,24 +92,32 @@ const router = createRouter({
       },
     },
     {
+      path: "/admin/drivers/new",
+      component: () => import("../views/admin/AdminDriver.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+      },
+      beforeEnter() {
+        const driverStore = useDrivers();
+        driverStore.clearCurrentDriver();
+      },
+    },
+    {
       path: "/admin/drivers/:slug",
       component: () => import("../views/admin/AdminDriver.vue"),
       meta: {
         requiresAuth: true,
         requiresAdmin: true,
       },
+      beforeEnter(to) {
+        const driverStore = useDrivers();
+        driverStore.setCurrentDriver(to.params.slug as string);
+      },
     },
     {
       path: "/admin/drivers",
       component: () => import("../views/admin/AdminDrivers.vue"),
-      meta: {
-        requiresAuth: true,
-        requiresAdmin: true,
-      },
-    },
-    {
-      path: "/admin/drivers/new",
-      component: () => import("../views/admin/AdminDriver.vue"),
       meta: {
         requiresAuth: true,
         requiresAdmin: true,
