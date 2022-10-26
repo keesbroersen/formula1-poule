@@ -2,12 +2,14 @@
   "name": "formula1-poule",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/vue-select": "^3.16.2",
     "core-js": "^3.8.3",
     "firebase": "^9.10.0",
     "moment": "^2.29.4",
@@ -16,6 +18,7 @@
     "sass-loader": "^13.0.2",
     "vue": "^3.2.13",
     "vue-router": "^4.1.5",
+    "vue-select": "^4.0.0-beta.5",
     "vue-svg-loader": "^0.16.0"
   },
   "devDependencies": {
@@ -30,7 +33,8 @@
     "@vue/eslint-config-typescript": "^9.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "typescript": "~4.5.5"
+    "typescript": "~4.5.5",
+    "vue-eslint-parser": "^9.1.0"
   },
   "eslintConfig": {
     "root": true,
@@ -39,7 +43,6 @@
     },
     "extends": [
       "plugin:vue/vue3-essential",
-      "eslint:recommended",
       "@vue/typescript"
     ],
     "parserOptions": {

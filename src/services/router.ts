@@ -3,6 +3,7 @@ import { getUser } from "./firebase";
 import { useRaces } from "@/store/races";
 import { useDrivers } from "@/store/drivers";
 import { useTeams } from "@/store/teams";
+import { usePredictions } from "@/store/predictions";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -145,6 +146,12 @@ const router = createRouter({
       component: () => import("../views/RaceDetail.vue"),
       meta: {
         requiresAuth: true,
+      },
+      beforeEnter(to) {
+        const raceStore = useRaces();
+        const predictionStore = usePredictions();
+        raceStore.setCurrentRace(to.params.slug as string);
+        predictionStore.setCurrentPrediction();
       },
     },
   ],

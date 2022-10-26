@@ -24,7 +24,7 @@ export const useDrivers = defineStore("drivers", {
     };
   },
   getters: {
-    allDrivers(): Driver[] {
+    getAllDrivers(): Driver[] {
       return this.drivers;
     },
     getDriverBySlug: (state) => {

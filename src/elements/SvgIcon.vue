@@ -1,18 +1,18 @@
 <template>
-  <component :is="svg" />
+	<component :is="svg" />
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineAsyncComponent, computed } from "vue";
+import { defineAsyncComponent, computed } from "vue"
 
 const props = defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
-});
+	name: {
+		type: String,
+		required: true
+	}
+})
 
 const svg = computed(() => {
-  return defineAsyncComponent(() => import(`@/assets/${props.name}.vue`));
-});
+	return defineAsyncComponent(() => import(`@/assets/${props.name}.vue`))
+})
 </script>

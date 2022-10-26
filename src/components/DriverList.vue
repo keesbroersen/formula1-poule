@@ -2,7 +2,7 @@
   <div class="driver-list">
     <div class="driver-list__content">
       <DriverListItem
-        v-for="driver in store.allDrivers"
+        v-for="driver in store.getAllDrivers"
         :key="driver.id"
         :driver="driver"
       />
