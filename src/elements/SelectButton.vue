@@ -1,5 +1,5 @@
 <template>
-	<select class="select" @change="onChange" v-model="selected">
+	<select class="select" v-model="selected">
 		<option
 			v-for="option in props.options"
 			:key="option.value"
@@ -14,17 +14,19 @@
 import { PropType, computed } from "vue"
 
 interface Option {
-	value: string | undefined
-	label: string | undefined
+	value: string
+	label: string
 }
 
-// const emit = defineEmits(["change"])
 const emit = defineEmits<{
-	(event: "change", value: string | undefined): void
+	(event: "change", value: string): void
 }>()
 
 const props = defineProps({
-	options: Array as PropType<Option[]>,
+	options: {
+		type: Array as PropType<Option[]>,
+		required: true
+	},
 	selected: String
 })
 
