@@ -1,14 +1,14 @@
 import { defineStore } from "pinia"
 import {
-	getFirestore,
 	collection,
 	getDocs,
 	addDoc,
-	deleteDoc,
 	updateDoc,
-	doc
+	doc,
+	query,
+	where
 } from "firebase/firestore"
-import firebaseApp from "@/services/firebase"
+import { useFirestore, useCurrentUser } from "vuefire"
 import {
 	Prediction,
 	PredictionClass,
@@ -18,20 +18,23 @@ import {
 import { useRaces } from "./races"
 import router from "@/services/router"
 import { useDrivers } from "./drivers"
-import { ref, computed, reactive, watch, Ref } from "vue"
-const db = getFirestore(firebaseApp)
+import { ref, computed, reactive, watch } from "vue"
+
+const db = useFirestore()
 const db_col = collection(db, "predictions")
 
 export const usePredictions = defineStore("predictions", () => {
+	// Consts
+	const user = useCurrentUser()
+	const raceStore = useRaces()
+
 	// State
 	const predictions: Prediction[] = reactive([])
 	const currentPrediction: Prediction = reactive(new PredictionClass())
-	const driversIdsPicked: string[] = reactive([])
 	const predictionsLoading = ref(true)
 
 	// Getters
 	const getCurrentPrediction = computed(() => {
-		const raceStore = useRaces()
 		return predictions.find(
 			(prediction: Prediction) => prediction.raceId === raceStore.currentRace.id
 		)
@@ -63,59 +66,56 @@ export const usePredictions = defineStore("predictions", () => {
 	// Actions
 	const getPredictions = async () => {
 		Object.assign(predictions, [])
-		const docs = await getDocs(db_col)
-		docs.forEach((doc) => {
-			const data = doc.data()
-			data.id = doc.id
-			if (predictions.find((prediction) => prediction.id === doc.id)) return
-			predictions.push(data as Prediction)
-		})
+
+		if (user.value?.uid) {
+			const q = query(
+				collection(db, "predictions"),
+				where("userId", "==", user.value.uid)
+			)
+			const docs = await getDocs(q)
+			docs.forEach((doc) => {
+				const data = doc.data()
+				data.id = doc.id
+				predictions.push(data as Prediction)
+			})
+		}
 		predictionsLoading.value = false
 	}
+
 	const addPrediction = async () => {
+		if (currentPrediction.id) return updatePrediction()
 		await addDoc(db_col, { ...currentPrediction })
-			.then(() => router.push({ path: "/races" }))
+			.then(() => router.push({ path: "/" }))
 			.catch((error) => {
 				throw error
 			})
 	}
+
 	const updatePrediction = async () => {
 		return updateDoc(doc(db_col, currentPrediction.id), {
 			...currentPrediction
 		})
-			.then(() => router.push({ path: "/races" }))
+			.then(() => router.push({ path: "/" }))
 			.catch((error) => {
 				throw error
 			})
 	}
-	const removePrediction = async () => {
-		await deleteDoc(doc(db_col, currentPrediction.id))
-			.then(() => router.push({ path: "/races" }))
-			.catch((error) => {
-				throw error
-			})
-	}
+
 	const setCurrentPrediction = async () => {
 		// Wait until races are loaded
-		while (predictionsLoading) {
+		while (predictionsLoading.value) {
 			await new Promise((resolve) => requestAnimationFrame(resolve))
 		}
-
-		if (!predictions.length) {
+		if (!getCurrentPrediction.value) {
 			Object.assign(currentPrediction, new PredictionClass())
-			const raceStore = useRaces()
+			if (user.value?.uid) currentPrediction.userId = user.value.uid
+
 			if (raceStore.currentRace.id) {
 				currentPrediction.raceId = raceStore.currentRace.id
 			}
 			return
 		}
-		Object.assign(currentPrediction, getCurrentPrediction)
-	}
-	const clearcurrentPrediction = () => {
-		Object.assign(currentPrediction, new PredictionClass())
-	}
-	const addDriverToPicked = (id: string) => {
-		driversIdsPicked.push(id)
+		Object.assign(currentPrediction, getCurrentPrediction.value)
 	}
 
 	// Watchers
@@ -174,19 +174,9 @@ export const usePredictions = defineStore("predictions", () => {
 		getPredictions,
 		setCurrentPrediction,
 		currentPrediction,
-		getPredictionDrivers
+		getPredictionDrivers,
+		predictions,
+		addPrediction,
+		updatePrediction
 	}
 })
-
-// const subscribeToStore = async () => {
-// 	// Wait until races are loaded
-// 	while (!getActivePinia()) {
-// 		await new Promise((resolve) => requestAnimationFrame(resolve))
-// 	}
-
-// 	usePredictions().$subscribe((mutation, state) => {
-// 		console.log({ mutation: mutation.events })
-// 	})
-// }
-
-// subscribeToStore()

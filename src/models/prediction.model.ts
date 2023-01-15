@@ -22,6 +22,7 @@ export interface RacePrediction {
 export interface Prediction {
 	id?: string
 	raceId: string
+	userId: string
 	qualification: QualificationPrediction
 	race: RacePrediction
 }
@@ -29,13 +30,15 @@ export interface Prediction {
 export class PredictionClass implements Prediction {
 	id: string
 	raceId: string
+	userId: string
 	qualification: QualificationPrediction
 	race: RacePrediction
 
 	constructor(
-		{ id, raceId, qualification, race } = {
+		{ id, raceId, userId, qualification, race } = {
 			id: "",
 			raceId: "",
+			userId: "",
 			qualification: { pos1: "", pos2: "", pos3: "" },
 			race: {
 				pos1: "",
@@ -54,6 +57,7 @@ export class PredictionClass implements Prediction {
 		}
 	) {
 		this.id = id
+		this.userId = userId
 		this.raceId = raceId
 		this.qualification = qualification
 		this.race = race

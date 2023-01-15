@@ -20,6 +20,11 @@
 				type="qualification"
 				v-model="currentPrediction.qualification.pos3"
 			/>
+			<StickyBlock>
+				<VueButton :type="isSubmitting ? 'loading' : 'primary'"
+					>Voorspel kwalificatie</VueButton
+				>
+			</StickyBlock>
 		</form>
 	</div>
 </template>
@@ -29,20 +34,17 @@ import { useRaces } from "@/store/races"
 import { usePredictions } from "@/store/predictions"
 import { storeToRefs } from "pinia"
 import DriverSelect from "@/elements/DriverSelect.vue"
+import StickyBlock from "@/elements/StickyBlock.vue"
+import VueButton from "@/elements/VueButton.vue"
+import { ref } from "vue"
 
 const raceStore = useRaces()
 const predictionStore = usePredictions()
 const { currentRace } = storeToRefs(raceStore)
 const { currentPrediction } = storeToRefs(predictionStore)
+const isSubmitting = ref(false)
 
-const submit = () => {
-	console.log("submit")
+const submit = async () => {
+	predictionStore.addPrediction()
 }
 </script>
-
-<style scoped>
-form {
-	display: flex;
-	flex-direction: column;
-}
-</style>
