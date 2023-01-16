@@ -143,7 +143,7 @@ const router = createRouter({
 		},
 		{
 			path: "/races/:slug",
-			component: () => import("../views/RaceDetail.vue"),
+			component: () => import("../views/PredictionPage.vue"),
 			meta: {
 				requiresAuth: true
 			},
@@ -152,7 +152,18 @@ const router = createRouter({
 				const predictionStore = usePredictions()
 				raceStore.setCurrentRace(to.params.slug as string)
 				predictionStore.setCurrentPrediction()
-			}
+			},
+			children: [
+				{
+					path: "qualification",
+					alias: "",
+					component: () => import("../views/PredictionQualification.vue")
+				},
+				{
+					path: "race",
+					component: () => import("../views/PredictionRace.vue")
+				}
+			]
 		}
 	]
 })

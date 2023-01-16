@@ -61,13 +61,50 @@ type Option = {
 	isPicked: boolean
 }
 
+const checkIfIsPicked = (
+	pickedForQualification: string | undefined,
+	pickedForRace: string | undefined,
+	pickedForDriverOfTheDay: boolean,
+	pickedForFastestLap: boolean
+): boolean => {
+	if (props.position === "fastestLap") {
+		return pickedForFastestLap
+	}
+
+	if (props.position === "driverOfTheDay") {
+		return pickedForDriverOfTheDay
+	}
+
+	if (
+		(props.type === "qualification" && !pickedForQualification) ||
+		(pickedForQualification && !pickedForQualification.includes("pos")) ||
+		(props.type === "race" && !pickedForRace) ||
+		(pickedForRace && !pickedForRace.includes("pos"))
+	) {
+		return false
+	}
+	return true
+}
+
 const options = computed(() =>
 	getPredictionDrivers.value.map(
-		({ name, id, pickedForQualification, pickedForRace }): Option => {
+		({
+			name,
+			id,
+			pickedForQualification,
+			pickedForRace,
+			pickedForDriverOfTheDay,
+			pickedForFastestLap
+		}): Option => {
 			return {
 				label: name,
 				id,
-				isPicked: !!pickedForQualification || !!pickedForRace
+				isPicked: checkIfIsPicked(
+					pickedForQualification,
+					pickedForRace,
+					pickedForDriverOfTheDay,
+					pickedForFastestLap
+				)
 			}
 		}
 	)

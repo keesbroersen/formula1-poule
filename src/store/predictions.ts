@@ -43,22 +43,31 @@ export const usePredictions = defineStore("predictions", () => {
 	const getPredictionDrivers = computed(() => {
 		const driverStore = useDrivers()
 		return driverStore.getAllDrivers.map((driver) => {
+			const pickedForDriverOfTheDay =
+				currentPrediction.race.driverOfTheDay === driver.id
+			const pickedForFastestLap =
+				currentPrediction.race.fastestLap === driver.id
+			const pickedForQualification = Object.keys(
+				currentPrediction.qualification
+			).find(
+				(key) =>
+					currentPrediction.qualification[
+						key as keyof QualificationPrediction
+					] === driver.id
+			)
+			const pickedForRace = Object.keys(currentPrediction.race).find((key) => {
+				if (key === "driverOfTheDay" || key === "fastestLap") return
+				return currentPrediction.race[key as keyof RacePrediction] === driver.id
+			})
+
 			return {
 				id: driver.id,
 				name: driver.name,
 				teamId: driver.teamId,
-				pickedForQualification: Object.keys(
-					currentPrediction.qualification
-				).find(
-					(key) =>
-						currentPrediction.qualification[
-							key as keyof QualificationPrediction
-						] === driver.id
-				),
-				pickedForRace: Object.keys(currentPrediction.race).find(
-					(key) =>
-						currentPrediction.race[key as keyof RacePrediction] === driver.id
-				)
+				pickedForQualification,
+				pickedForRace,
+				pickedForDriverOfTheDay,
+				pickedForFastestLap
 			}
 		})
 	})
@@ -152,6 +161,12 @@ export const usePredictions = defineStore("predictions", () => {
 			...currentPrediction.race
 		}),
 		(newValue, oldValue) => {
+			// Don't take fastestLap and driverOfTheDay into consideration
+			delete newValue.fastestLap
+			delete newValue.driverOfTheDay
+			delete oldValue.fastestLap
+			delete oldValue.driverOfTheDay
+
 			const changedKey = Object.keys(newValue).find(
 				(key) =>
 					newValue[key as keyof RacePrediction] !==
