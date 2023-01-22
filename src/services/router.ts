@@ -23,6 +23,20 @@ const router = createRouter({
 			}
 		},
 		{
+			path: "/poule/register",
+			component: () => import("../views/PouleRegister.vue"),
+			meta: {
+				requiresAuth: true
+			}
+		},
+		{
+			path: "/poule/:id",
+			component: () => import("../views/PouleAddUser.vue"),
+			meta: {
+				requiresAuth: true
+			}
+		},
+		{
 			path: "/account",
 			component: () => import("../views/UserAccount.vue"),
 			meta: {

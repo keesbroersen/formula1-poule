@@ -9,6 +9,7 @@ import { useTeams } from "@/store/teams"
 import { useDrivers } from "@/store/drivers"
 import { useRaces } from "@/store/races"
 import { usePredictions } from "./store/predictions"
+import { usePoules } from "./store/poules"
 const pinia = createPinia()
 const app = createApp(App)
 
@@ -30,4 +31,5 @@ getCurrentUser().then(() => {
 	useDrivers().getDrivers()
 	useRaces().getRaces()
 	usePredictions().getPredictions()
+	usePoules().getPoules()
 })

@@ -77,10 +77,7 @@ export const usePredictions = defineStore("predictions", () => {
 		Object.assign(predictions, [])
 
 		if (user.value?.uid) {
-			const q = query(
-				collection(db, "predictions"),
-				where("userId", "==", user.value.uid)
-			)
+			const q = query(db_col, where("userId", "==", user.value.uid))
 			const docs = await getDocs(q)
 			docs.forEach((doc) => {
 				const data = doc.data()

@@ -142,10 +142,29 @@ input[type="color"]::-webkit-color-swatch {
 	font-family: var(--font);
 	font-size: 18px;
 
+	&:hover {
+		opacity: 0.9;
+	}
+
+	&:active {
+		transform: translateY(1px);
+	}
+
+	&:disabled {
+		cursor: initial;
+		opacity: 1;
+		transform: none;
+		color: rgba(255, 255, 255, 0.5);
+	}
+
 	&--primary,
 	&--sticky &--form {
 		background: #fff;
 		color: #000;
+
+		&:disabled {
+			color: rgba(0, 0, 0, 0.3);
+		}
 	}
 
 	&--sticky {
@@ -159,25 +178,10 @@ input[type="color"]::-webkit-color-swatch {
 		margin: 12px;
 		width: calc(100vw - 24px);
 	}
-}
 
-.button svg {
-	margin-right: 8px;
-}
-
-.button:hover {
-	opacity: 0.9;
-}
-
-.button:active {
-	transform: translateY(1px);
-}
-
-.button:disabled {
-	cursor: initial;
-	opacity: 1;
-	transform: none;
-	color: rgba(255, 255, 255, 0.5);
+	svg {
+		margin-right: 8px;
+	}
 }
 
 .form {
