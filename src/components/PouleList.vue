@@ -3,9 +3,11 @@
 		<SelectButton :options="selectOptions" @change="onChange" />
 	</ListHeader>
 	<div v-if="poules.length" class="poule-list">
-		<div class="poule-list__content">
-			<div v-for="user in currentPoule?.users" :key="user">{{ user }}</div>
-		</div>
+		<PouleListItem
+			v-for="user in currentPoule?.users"
+			:user-id="user"
+			:key="user"
+		/>
 		<div>
 			Mensen uitnodigen via: <a :href="pouleLink">{{ pouleLink }}</a>
 		</div>
@@ -29,6 +31,7 @@ import { computed } from "vue"
 import ListHeader from "./ListHeader.vue"
 import SelectButton from "@/elements/SelectButton.vue"
 import { pouleLink } from "@/composables/functions"
+import PouleListItem from "./PouleListItem.vue"
 
 const pouleStore = usePoules()
 const { currentPoule, poules } = storeToRefs(pouleStore)
@@ -48,7 +51,7 @@ const onChange = (value: string) => {
 </script>
 
 <style scoped lang="scss">
-.race-list {
+.poule-list {
 	display: flex;
 	flex-direction: column;
 	border-top: 1px solid var(--background-opacity);

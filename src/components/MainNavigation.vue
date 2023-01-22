@@ -2,8 +2,12 @@
 	<nav class="main-navigation container">
 		<span v-if="user">
 			<router-link to="/">Home</router-link> |
-			<router-link to="/account">{{ name }}</router-link>
-			| <router-link to="/admin">Admin</router-link> |
+			<router-link to="/account">{{ currentUser.name }}</router-link>
+			|
+			<router-link to="/admin" v-if="currentUser.role === 'admin'"
+				>Admin</router-link
+			>
+			|
 			<button @click="logout">Logout</button>
 		</span>
 		<span v-else>
@@ -14,17 +18,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "@vue/reactivity"
 import { getAuth, signOut } from "firebase/auth"
 import { useRouter } from "vue-router"
+import { storeToRefs } from "pinia"
 import { useCurrentUser } from "vuefire"
+import { useUsers } from "@/store/users"
+const userStore = useUsers()
+const { currentUser } = storeToRefs(userStore)
 
 const router = useRouter()
 const auth = getAuth()
 const user = useCurrentUser()
-const name = computed(
-	() => user.value?.providerData[0].displayName || user.value?.email
-)
 
 const logout = () => {
 	signOut(auth)

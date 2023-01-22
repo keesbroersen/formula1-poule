@@ -13,6 +13,7 @@ import {
 import { useFirestore, useCurrentUser } from "vuefire"
 import { Poule } from "@/models/poule.model"
 import router from "@/services/router"
+import { useUsers } from "@/store/users"
 
 const db = useFirestore()
 const db_col = collection(db, "poules")
@@ -28,6 +29,7 @@ export const usePoules = defineStore("poules", {
 	},
 	actions: {
 		async getPoules(currentId: string = "") {
+			const userStore = useUsers()
 			const user = useCurrentUser()
 			if (!user.value?.uid) {
 				return console.warn("no user (id)")
@@ -40,10 +42,11 @@ export const usePoules = defineStore("poules", {
 				const data = doc.data()
 				data.id = doc.id
 				if (this.poules.find((poule) => poule.id === doc.id)) return
+				userStore.getUsers(data.users)
 				this.poules.push(data as Poule)
 			})
 
-			const setId = currentId || this.poules[0].id
+			const setId = currentId || this.poules[0]?.id
 			if (setId) {
 				this.setCurrentPoule(setId)
 			}
