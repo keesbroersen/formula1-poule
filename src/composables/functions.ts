@@ -1,9 +1,9 @@
 import { computed } from "vue"
 import { usePoules } from "@/store/poules"
+import { storeToRefs } from "pinia"
 
 const pouleStore = usePoules()
 const { currentPoule } = storeToRefs(pouleStore)
-import { storeToRefs } from "pinia"
 
 export const pouleLink = computed(
 	() =>

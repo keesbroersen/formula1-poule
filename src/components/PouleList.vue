@@ -5,8 +5,8 @@
 	<div v-if="poules.length" class="poule-list">
 		<PouleListItem
 			v-for="user in currentPoule?.users"
-			:user-id="user"
-			:key="user"
+			:user="user"
+			:key="user.id"
 		/>
 		<div>
 			Mensen uitnodigen via: <a :href="pouleLink">{{ pouleLink }}</a>
@@ -46,7 +46,7 @@ const selectOptions = computed(() =>
 )
 
 const onChange = (value: string) => {
-	pouleStore.setCurrentPoule(value)
+	pouleStore.currentPouleId = value
 }
 </script>
 

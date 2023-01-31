@@ -1,26 +1,27 @@
 <template>
 	<router-link
-		v-if="user"
+		v-if="props.user"
 		class="poule-list-item container"
-		:to="`users/${user.id}`"
+		:to="`users/${props.user.slug}`"
 	>
-		{{ user.name }} - {{ user.score }}
+		{{ props.user.name }} - {{ props.user.score }}
 	</router-link>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue"
 import { useUsers } from "@/store/users"
+import { User } from "@/models/user.model"
 
-const usersStore = useUsers()
+// const usersStore = useUsers()
 
 const props = defineProps<{
-	userId: string
+	user: User
 }>()
 
-const user = computed(() => {
-	return usersStore.users.find((user) => user.id === props.userId)
-})
+// const user = computed(() => {
+// 	return usersStore.users.find((user) => user.id === props.userId)
+// })
 </script>
 
 <style lang="scss" scoped>

@@ -9,7 +9,7 @@ import {
 	where,
 	getDocs
 } from "firebase/firestore"
-import { useFirestore, useCurrentUser } from "vuefire"
+import { useFirestore, useCurrentUser, useDocument } from "vuefire"
 import { User } from "@/models/user.model"
 import router from "@/services/router"
 import {
@@ -17,6 +17,7 @@ import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword
 } from "firebase/auth"
+import { convertToSlug } from "@/composables/getters"
 
 const db = useFirestore()
 const db_col = collection(db, "users")
@@ -77,8 +78,19 @@ export const useUsers = defineStore("users", {
 				password
 			)
 			const uid = userCredential.user.uid
+
+			// Set slug and check for duplicates
+			let slug = convertToSlug(name)
+			const q = query(db_col, where("userId", "==", slug))
+			const slugDocs = await getDocs(q)
+			if (slugDocs) {
+				slug = `${slug}-${Math.floor(Math.random() * 8999 + 1000)}`
+			}
+			console.log({ slugDocs, slug })
+
 			await setDoc(doc(db, "users", uid), {
 				name,
+				slug,
 				score: 0,
 				previousScore: 0,
 				role: "user",
