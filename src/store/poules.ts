@@ -21,7 +21,6 @@ import { computed, ref, Ref, ComputedRef } from "vue"
 
 const db = useFirestore()
 const db_col = collection(db, "poules")
-type Filter = "upcoming" | "completed" | "all"
 
 export const usePoules = defineStore("poules", () => {
 	// Get poules
@@ -32,7 +31,6 @@ export const usePoules = defineStore("poules", () => {
 	const { data: poules } = useCollection<Poule>(q)
 
 	// State
-	const filter: Ref<Filter> = ref("upcoming")
 	const currentPouleId = ref("")
 	const currentPoule: ComputedRef<Poule> = computed(() => {
 		if (!poules.value.length) return new Poule()
@@ -91,17 +89,11 @@ export const usePoules = defineStore("poules", () => {
 			})
 	}
 
-	const setFilter = (value: Filter) => {
-		filter.value = value
-	}
-
 	return {
 		poules,
 		currentPoule,
 		currentPouleId,
-		filter,
 		addPoule,
-		addUserToPoule,
-		setFilter
+		addUserToPoule
 	}
 })

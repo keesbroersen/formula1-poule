@@ -1,24 +1,22 @@
 import { defineStore } from "pinia"
 import {
 	collection,
-	getDocs,
 	addDoc,
 	updateDoc,
 	doc,
 	query,
 	where
 } from "firebase/firestore"
-import { useFirestore, useCurrentUser } from "vuefire"
+import { useFirestore, useCurrentUser, useCollection } from "vuefire"
 import {
 	Prediction,
-	PredictionClass,
 	QualificationPrediction,
 	RacePrediction
 } from "@/models/prediction.model"
 import { useRaces } from "./races"
 import router from "@/services/router"
 import { useDrivers } from "./drivers"
-import { ref, computed, reactive, watch } from "vue"
+import { ref, computed, watch, Ref, ComputedRef } from "vue"
 
 const db = useFirestore()
 const db_col = collection(db, "predictions")
@@ -27,38 +25,43 @@ export const usePredictions = defineStore("predictions", () => {
 	// Consts
 	const user = useCurrentUser()
 	const raceStore = useRaces()
+	const userUid = user.value?.uid || ""
+	const q = query(db_col, where("userId", "==", userUid))
 
 	// State
-	const predictions: Prediction[] = reactive([])
-	const currentPrediction: Prediction = reactive(new PredictionClass())
-	const predictionsLoading = ref(true)
-
-	// Getters
-	const getCurrentPrediction = computed(() => {
-		return predictions.find(
-			(prediction: Prediction) => prediction.raceId === raceStore.currentRace.id
-		)
+	const { data: predictions, promise } = useCollection<Prediction>(q)
+	const currentPrediction: Ref<Prediction> = ref({
+		raceId: raceStore.currentRace.id,
+		userId: userUid,
+		qualification: new QualificationPrediction(),
+		race: new RacePrediction()
 	})
 
+	// Getters
 	const getPredictionDrivers = computed(() => {
 		const driverStore = useDrivers()
 		return driverStore.getAllDrivers.map((driver) => {
 			const pickedForDriverOfTheDay =
-				currentPrediction.race.driverOfTheDay === driver.id
+				currentPrediction.value.race.driverOfTheDay === driver.id
 			const pickedForFastestLap =
-				currentPrediction.race.fastestLap === driver.id
+				currentPrediction.value.race.fastestLap === driver.id
 			const pickedForQualification = Object.keys(
-				currentPrediction.qualification
+				currentPrediction.value.qualification
 			).find(
 				(key) =>
-					currentPrediction.qualification[
+					currentPrediction.value.qualification[
 						key as keyof QualificationPrediction
 					] === driver.id
 			)
-			const pickedForRace = Object.keys(currentPrediction.race).find((key) => {
-				if (key === "driverOfTheDay" || key === "fastestLap") return
-				return currentPrediction.race[key as keyof RacePrediction] === driver.id
-			})
+			const pickedForRace = Object.keys(currentPrediction.value.race).find(
+				(key) => {
+					if (key === "driverOfTheDay" || key === "fastestLap") return
+					return (
+						currentPrediction.value.race[key as keyof RacePrediction] ===
+						driver.id
+					)
+				}
+			)
 
 			return {
 				id: driver.id,
@@ -72,63 +75,48 @@ export const usePredictions = defineStore("predictions", () => {
 		})
 	})
 
-	// Actions
-	const getPredictions = async () => {
-		Object.assign(predictions, [])
-
-		if (user.value?.uid) {
-			const q = query(db_col, where("userId", "==", user.value.uid))
-			const docs = await getDocs(q)
-			docs.forEach((doc) => {
-				const data = doc.data()
-				data.id = doc.id
-				predictions.push(data as Prediction)
-			})
-		}
-		predictionsLoading.value = false
-	}
-
+	// Setters
 	const addPrediction = async () => {
-		if (currentPrediction.id) return updatePrediction()
-		await addDoc(db_col, { ...currentPrediction })
-			.then(() => router.push({ path: "/" }))
-			.catch((error) => {
-				throw error
-			})
+		try {
+			if (currentPrediction.value.id) return updatePrediction()
+			await addDoc(db_col, { ...currentPrediction.value })
+			router.push({ path: "/" })
+		} catch (error) {
+			throw error
+		}
 	}
 
 	const updatePrediction = async () => {
-		return updateDoc(doc(db_col, currentPrediction.id), {
-			...currentPrediction
-		})
-			.then(() => router.push({ path: "/" }))
-			.catch((error) => {
-				throw error
+		try {
+			updateDoc(doc(db_col, currentPrediction.value.id), {
+				...currentPrediction.value
 			})
+			router.push({ path: "/" })
+		} catch (error) {
+			throw error
+		}
 	}
 
 	const setCurrentPrediction = async () => {
-		// Wait until races are loaded
-		while (predictionsLoading.value) {
-			await new Promise((resolve) => requestAnimationFrame(resolve))
-		}
-		if (!getCurrentPrediction.value) {
-			Object.assign(currentPrediction, new PredictionClass())
-			if (user.value?.uid) currentPrediction.userId = user.value.uid
-
-			if (raceStore.currentRace.id) {
-				currentPrediction.raceId = raceStore.currentRace.id
-			}
+		await promise.value
+		const getPredictionByRaceId = predictions.value.find(
+			(prediction: Prediction) => prediction.raceId === raceStore.currentRace.id
+		)
+		if (!getPredictionByRaceId) {
+			Object.assign(currentPrediction.value, new Prediction())
+			delete currentPrediction.value.id
+			currentPrediction.value.userId = user.value?.uid
+			currentPrediction.value.raceId = raceStore.currentRace.id
 			return
 		}
-		Object.assign(currentPrediction, getCurrentPrediction.value)
+		Object.assign(currentPrediction.value, getPredictionByRaceId)
 	}
 
 	// Watchers
 	// Watch qualification prediction. If an already chosen driver is picked, remove the older one
 	watch(
 		() => ({
-			...currentPrediction.qualification
+			...currentPrediction.value.qualification
 		}),
 		(newValue, oldValue) => {
 			const changedKey = Object.keys(newValue).find(
@@ -145,7 +133,7 @@ export const usePredictions = defineStore("predictions", () => {
 
 			// If driver is already predicted, remove from old position
 			if (doubleEntry) {
-				currentPrediction.qualification[
+				currentPrediction.value.qualification[
 					doubleEntry as keyof QualificationPrediction
 				] = ""
 			}
@@ -155,7 +143,7 @@ export const usePredictions = defineStore("predictions", () => {
 	// Watch race prediction. If an already chosen driver is picked, remove the older one
 	watch(
 		() => ({
-			...currentPrediction.race
+			...currentPrediction.value.race
 		}),
 		(newValue, oldValue) => {
 			// Don't take fastestLap and driverOfTheDay into consideration
@@ -177,18 +165,17 @@ export const usePredictions = defineStore("predictions", () => {
 
 			// If driver is already predicted, remove from old position
 			if (doubleEntry) {
-				currentPrediction.race[doubleEntry as keyof RacePrediction] = ""
+				currentPrediction.value.race[doubleEntry as keyof RacePrediction] = ""
 			}
 		}
 	)
 
 	return {
-		getPredictions,
-		setCurrentPrediction,
 		currentPrediction,
 		getPredictionDrivers,
 		predictions,
 		addPrediction,
-		updatePrediction
+		updatePrediction,
+		setCurrentPrediction
 	}
 })

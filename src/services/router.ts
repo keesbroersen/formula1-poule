@@ -163,9 +163,7 @@ const router = createRouter({
 			},
 			beforeEnter(to) {
 				const raceStore = useRaces()
-				const predictionStore = usePredictions()
 				raceStore.setCurrentRace(to.params.slug as string)
-				predictionStore.setCurrentPrediction()
 			},
 			children: [
 				{

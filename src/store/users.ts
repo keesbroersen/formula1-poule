@@ -86,7 +86,6 @@ export const useUsers = defineStore("users", {
 			if (slugDocs) {
 				slug = `${slug}-${Math.floor(Math.random() * 8999 + 1000)}`
 			}
-			console.log({ slugDocs, slug })
 
 			await setDoc(doc(db, "users", uid), {
 				name,

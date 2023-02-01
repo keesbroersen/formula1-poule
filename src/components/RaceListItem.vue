@@ -12,7 +12,9 @@
 		</div>
 
 		<div class="race__footer" v-if="isHighlighted">
-			score
+			<p v-if="qualificationFilled">Quali ✓</p>
+			<p v-if="raceFilled">race ✓</p>
+			<p class="points">score</p>
 			<p class="next-session">{{ dateUntilNow }}</p>
 		</div>
 	</router-link>
@@ -21,6 +23,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue"
 import { Race } from "@/models/race.model"
+import { usePredictions } from "@/store/predictions"
 import CountryFlag from "@/elements/CountryFlag.vue"
 import moment from "moment"
 moment.locale("nl")
@@ -39,6 +42,23 @@ const dateTimeFormatted = computed(() => {
 		month: "short",
 		day: "numeric"
 	})
+})
+
+const predictionStore = usePredictions()
+const thisPrediction = computed(() =>
+	predictionStore.predictions.find(
+		(prediction) => prediction.raceId === race.value.id
+	)
+)
+const qualificationFilled = computed(() => {
+	if (!thisPrediction.value) return false
+	return Object.entries(thisPrediction.value.qualification).every(
+		(item) => item[1]
+	)
+})
+const raceFilled = computed(() => {
+	if (!thisPrediction.value) return false
+	return Object.entries(thisPrediction.value.race).every((item) => item[1])
 })
 
 const dateUntilNow = computed(() => {

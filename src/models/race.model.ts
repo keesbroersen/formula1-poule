@@ -1,17 +1,17 @@
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore"
 
-export interface RaceDates {
-  qualification: Timestamp;
-  race: Timestamp;
+export class RaceDates {
+	qualification: Timestamp = Timestamp.now()
+	race: Timestamp = Timestamp.now()
 }
 
-export interface Race {
-  id?: string;
-  circuit: string;
-  country: string;
-  countryCode: string;
-  dates: RaceDates;
-  isSprintRace: boolean;
-  slug: string;
-  result?: Object;
+export class Race {
+	id?: string
+	circuit: string = ""
+	country: string = ""
+	countryCode: string = ""
+	dates: RaceDates = new RaceDates()
+	isSprintRace: boolean = false
+	slug: string = ""
+	result?: Object
 }

@@ -30,7 +30,5 @@ app.mount("#app")
 getCurrentUser().then(() => {
 	useTeams().getTeams()
 	useDrivers().getDrivers()
-	useRaces().getRaces()
-	usePredictions().getPredictions()
 	useUsers().getUser()
 })
