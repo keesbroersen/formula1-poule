@@ -28,6 +28,5 @@ app.mount("#app")
 
 // Initialize stores
 getCurrentUser().then(() => {
-	useDrivers().getDrivers()
 	useUsers().getUser()
 })

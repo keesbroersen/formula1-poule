@@ -40,7 +40,7 @@ export const usePredictions = defineStore("predictions", () => {
 	// Getters
 	const getPredictionDrivers = computed(() => {
 		const driverStore = useDrivers()
-		return driverStore.getAllDrivers.map((driver) => {
+		return driverStore.drivers.map((driver) => {
 			const pickedForDriverOfTheDay =
 				currentPrediction.value.race.driverOfTheDay === driver.id
 			const pickedForFastestLap =
