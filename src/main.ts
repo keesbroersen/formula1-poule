@@ -28,7 +28,6 @@ app.mount("#app")
 
 // Initialize stores
 getCurrentUser().then(() => {
-	useTeams().getTeams()
 	useDrivers().getDrivers()
 	useUsers().getUser()
 })
