@@ -104,6 +104,36 @@ const router = createRouter({
 			}
 		},
 		{
+			path: "/admin/results",
+			component: () => import("../views/admin/AdminResults.vue"),
+			meta: {
+				requiresAuth: true,
+				requiresAdmin: true
+			}
+		},
+		{
+			path: "/admin/results/:slug",
+			component: () => import("../views/admin/AdminResult.vue"),
+			meta: {
+				requiresAuth: true
+			},
+			beforeEnter(to) {
+				const raceStore = useRaces()
+				raceStore.setCurrentRace(to.params.slug as string)
+			},
+			children: [
+				{
+					path: "qualification",
+					alias: "",
+					component: () => import("../views/admin/AdminResultQualification.vue")
+				},
+				{
+					path: "race",
+					component: () => import("../views/admin/AdminResultRace.vue")
+				}
+			]
+		},
+		{
 			path: "/admin/teams",
 			component: () => import("../views/admin/AdminTeams.vue"),
 			meta: {

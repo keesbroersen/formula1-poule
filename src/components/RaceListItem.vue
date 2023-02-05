@@ -2,10 +2,9 @@
 	<router-link
 		class="race container"
 		:class="{ 'race-highlighted': isHighlighted }"
-		:to="`races/${race.slug}`"
+		:to="link"
 	>
 		<CountryFlag :countryCode="race.countryCode" />
-
 		<div class="race__header">
 			<p class="title">{{ race.circuit }} - {{ race.country }}</p>
 			<p class="date">{{ dateTimeFormatted }}</p>
@@ -26,12 +25,21 @@ import { Race } from "@/models/race.model"
 import { usePredictions } from "@/store/predictions"
 import CountryFlag from "@/elements/CountryFlag.vue"
 import moment from "moment"
+import { useRoute } from "vue-router"
+const route = useRoute()
 moment.locale("nl")
 
 const props = defineProps<{
 	race: Race
 	isHighlighted: Boolean
 }>()
+
+const link = computed(() => {
+	if (route.path === "/admin/results") {
+		return `/admin/results/${props.race.slug}`
+	}
+	return `races/${props.race.slug}`
+})
 
 const race = ref(props.race)
 const date = ref(race.value?.dates?.race.toDate())

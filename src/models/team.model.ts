@@ -4,4 +4,5 @@ export class Team {
 	country: string = ""
 	color: string = "#000000"
 	slug: string = ""
+	points: number = 0
 }

@@ -13,9 +13,9 @@ import { Race } from "@/models/race.model"
 import moment from "moment"
 import router from "@/services/router"
 import { computed, ComputedRef, Ref, ref, watch } from "vue"
-import { RacePrediction } from "@/models/prediction.model"
 import { useCollection } from "vuefire"
 import { usePredictions } from "./predictions"
+import { useResults } from "./results"
 
 type Filter = "upcoming" | "completed" | "all"
 
@@ -112,6 +112,8 @@ export const useRaces = defineStore("races", () => {
 			// On current race change, set current prediction
 			const predictionStore = usePredictions()
 			predictionStore.setCurrentPrediction()
+			const resultStore = useResults()
+			resultStore.setCurrentResult()
 		}
 	)
 
