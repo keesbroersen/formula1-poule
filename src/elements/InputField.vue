@@ -20,6 +20,10 @@ const props = defineProps({
 	display: flex;
 	border-radius: 3px;
 
+	input:disabled {
+		opacity: 0.5;
+	}
+
 	&:not(.input-field--text) input {
 		cursor: pointer;
 	}

@@ -3,7 +3,7 @@ import { getCurrentUser } from "vuefire"
 import { useRaces } from "@/store/races"
 import { useDrivers } from "@/store/drivers"
 import { useTeams } from "@/store/teams"
-import { usePredictions } from "@/store/predictions"
+import { useUsers } from "@/store/users"
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -13,6 +13,18 @@ const router = createRouter({
 			component: () => import("../views/UserHome.vue"),
 			meta: {
 				requiresAuth: true
+			}
+		},
+		{
+			path: "/poule/:slug",
+			component: () => import("../views/PouleUser.vue"),
+			meta: {
+				requiresAuth: true,
+				requiresAdmin: true
+			},
+			beforeEnter(to) {
+				const usersStore = useUsers()
+				usersStore.pouleUserSlug = to.params.slug as string
 			}
 		},
 		{

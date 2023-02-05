@@ -18,6 +18,7 @@ import {
 import { Poule } from "@/models/poule.model"
 import router from "@/services/router"
 import { computed, ref, Ref, ComputedRef } from "vue"
+import { User } from "@/models/user.model"
 
 const db = useFirestore()
 const db_col = collection(db, "poules")

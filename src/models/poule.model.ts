@@ -1,5 +1,4 @@
 import { DocumentReference } from "firebase/firestore"
-import { User } from "./user.model"
 
 export class Poule {
 	id?: string
