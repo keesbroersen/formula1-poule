@@ -42,7 +42,7 @@ const router = createRouter({
 			}
 		},
 		{
-			path: "/poule/:id",
+			path: "/poule/share/:id",
 			component: () => import("../views/PouleAddUser.vue"),
 			meta: {
 				requiresAuth: true

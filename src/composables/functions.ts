@@ -7,5 +7,5 @@ const { currentPoule } = storeToRefs(pouleStore)
 
 export const pouleLink = computed(
 	() =>
-		`${document.location.origin}/poule/${currentPoule.value.id}?code=${currentPoule.value.registration_code}`
+		`${document.location.origin}/poule/share/${currentPoule.value.id}?code=${currentPoule.value.registration_code}`
 )
