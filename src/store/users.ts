@@ -135,6 +135,18 @@ export const useUsers = defineStore("users", () => {
 		}
 	}
 
+	const getUserById = async (userId: string) => {
+		const { data: user, promise } = useDocument<User>(doc(db_col, userId))
+		await promise.value
+		return user
+	}
+
+	const updateUserScore = async (userId: string, score: Array<number>) => {
+		return updateDoc(doc(db_col, userId), {
+			score
+		})
+	}
+
 	return {
 		user,
 		pouleUser,
@@ -143,6 +155,8 @@ export const useUsers = defineStore("users", () => {
 		registerUser,
 		logoutUser,
 		updateUser,
-		removeUser
+		removeUser,
+		updateUserScore,
+		getUserById
 	}
 })

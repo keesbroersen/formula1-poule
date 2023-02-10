@@ -30,13 +30,7 @@ export const usePredictions = defineStore("predictions", () => {
 
 	// State
 	const { data: predictions, promise } = useCollection<Prediction>(q)
-	const currentPrediction: Ref<Prediction> = ref({
-		id: "",
-		raceId: raceStore.currentRace.id,
-		userId: userUid,
-		qualification: new QualificationPrediction(),
-		race: new RacePrediction()
-	})
+	const currentPrediction: Ref<Prediction> = ref(new Prediction())
 
 	// Getters
 	const getPredictionDrivers = computed(() => {
@@ -80,9 +74,12 @@ export const usePredictions = defineStore("predictions", () => {
 	const addPrediction = async () => {
 		try {
 			if (currentPrediction.value.id) return updatePrediction()
-			await addDoc(db_col, { ...currentPrediction.value })
+			const payload = JSON.parse(JSON.stringify({ ...currentPrediction.value }))
+			delete payload.id
+			await addDoc(db_col, payload)
 			router.push({ path: "/" })
 		} catch (error) {
+			console.log(error)
 			throw error
 		}
 	}

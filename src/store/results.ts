@@ -1,12 +1,26 @@
 import { defineStore } from "pinia"
-import { collection, addDoc, updateDoc, doc } from "firebase/firestore"
+import {
+	collection,
+	addDoc,
+	updateDoc,
+	doc,
+	query,
+	where,
+	getDocs
+} from "firebase/firestore"
 import { useFirestore, useCollection } from "vuefire"
 import { Result, QualificationResult, RaceResult } from "@/models/result.model"
 import router from "@/services/router"
 import { useRaces } from "./races"
 import { useTeams } from "./teams"
+import { useUsers } from "./users"
 import { useDrivers } from "./drivers"
 import { ref, computed, watch, Ref } from "vue"
+import {
+	Prediction,
+	QualificationPrediction,
+	RacePrediction
+} from "@/models/prediction.model"
 
 const db = useFirestore()
 const db_col = collection(db, "results")
@@ -56,13 +70,9 @@ export const useResults = defineStore("results", () => {
 
 	// Setters
 	const addResult = async () => {
-		// Save result
-		// Add score to drivers
-		// Add score to teams
-		// Add score to users (3 for correct, 1 for one position off)
-
 		try {
 			saveScoreToDriversAndteams()
+			saveScoreToUsers()
 			if (currentResult.value.id) return updateResult()
 			const payload = { ...currentResult.value }
 			await addDoc(db_col, payload)
@@ -174,6 +184,85 @@ export const useResults = defineStore("results", () => {
 			teamScores[currentResult.value.raceIndex] = value
 			teamsStore.updateTeamScore(key, teamScores)
 		}
+	}
+
+	const calculateQualificationResult = (prediction: Prediction): number => {
+		let score = 0
+		const qualificationResult = currentResult.value.qualification
+		for (const [key, value] of Object.entries(qualificationResult)) {
+			if (
+				prediction.qualification[key as keyof QualificationPrediction] === value
+			) {
+				score++
+			}
+		}
+
+		// If user has all three correct, extra point is awarded
+		if (score === 3) score = 4
+
+		return score
+	}
+
+	const calculateRaceResult = (prediction: Prediction): number => {
+		let score = 0
+		let index = 0
+
+		const raceResult = currentResult.value.race
+		for (const [key, value] of Object.entries(raceResult)) {
+			if (prediction.race[key as keyof RacePrediction] === value) {
+				// Direct hit
+				if (key === "driver_of_the_day" || key === "fastest_lap") {
+					// These get one point
+					score++
+				} else {
+					// These get three points
+					score += 3
+				}
+			} else if (
+				(key.includes("pos") &&
+					prediction.race[key as keyof RacePrediction] ===
+						raceResult[`pos${index - 1}` as keyof RacePrediction]) ||
+				(key.includes("pos") &&
+					prediction.race[key as keyof RacePrediction] ===
+						raceResult[`pos${index + 1}` as keyof RacePrediction])
+			) {
+				// Indirect hit (one position of)
+				// One point
+				score++
+			}
+
+			index++
+		}
+
+		return score
+	}
+
+	const saveUserScore = async (userId: string, score: number) => {
+		const userStore = useUsers()
+
+		const user = await userStore.getUserById(userId)
+		const userPoints = user.value?.score || []
+		userPoints[currentResult.value.raceIndex] = score
+		userStore.updateUserScore(userId, userPoints)
+	}
+
+	const saveScoreToUsers = async () => {
+		const q = query(
+			collection(db, "predictions"),
+			where("raceId", "==", currentResult.value.raceId)
+		)
+		const predictions = await getDocs(q)
+		predictions.forEach((doc) => {
+			const prediction = doc.data() as Prediction
+			if (!prediction.userId) return
+			let score = 0
+
+			// Calculate qualification score
+			score += calculateQualificationResult(prediction)
+			score += calculateRaceResult(prediction)
+
+			saveUserScore(prediction.userId, score)
+		})
 	}
 
 	// Watchers
