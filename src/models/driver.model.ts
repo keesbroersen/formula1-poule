@@ -1,8 +1,8 @@
 export class Driver {
-	id?: string
+	readonly id?: string
 	name: string = ""
 	country: string = ""
 	slug: string = ""
 	teamId: string = ""
-	points: number = 0
+	points: Array<number> = []
 }

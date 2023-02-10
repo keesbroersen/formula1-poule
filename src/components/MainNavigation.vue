@@ -4,6 +4,8 @@
 			<router-link to="/">Home</router-link> |
 			<router-link to="/account">{{ user.name }}</router-link>
 			|
+			<router-link to="/standings">Tussenstand</router-link>
+			|
 			<router-link to="/admin" v-if="user.role === 'admin'">Admin</router-link>
 			|
 			<button @click="userStore.logoutUser">Logout</button>

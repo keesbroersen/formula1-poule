@@ -31,6 +31,7 @@ export const usePredictions = defineStore("predictions", () => {
 	// State
 	const { data: predictions, promise } = useCollection<Prediction>(q)
 	const currentPrediction: Ref<Prediction> = ref({
+		id: "",
 		raceId: raceStore.currentRace.id,
 		userId: userUid,
 		qualification: new QualificationPrediction(),
@@ -103,13 +104,12 @@ export const usePredictions = defineStore("predictions", () => {
 			(prediction: Prediction) => prediction.raceId === raceStore.currentRace.id
 		)
 		if (!getPredictionByRaceId) {
-			Object.assign(currentPrediction.value, new Prediction())
-			delete currentPrediction.value.id
+			currentPrediction.value = new Prediction()
 			currentPrediction.value.userId = user.value?.uid
 			currentPrediction.value.raceId = raceStore.currentRace.id
 			return
 		}
-		Object.assign(currentPrediction.value, getPredictionByRaceId)
+		currentPrediction.value = getPredictionByRaceId
 	}
 
 	// Watchers

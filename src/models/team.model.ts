@@ -1,8 +1,8 @@
 export class Team {
-	id?: string
+	readonly id?: string
 	name: string = ""
 	country: string = ""
 	color: string = "#000000"
 	slug: string = ""
-	points: number = 0
+	points: Array<number> = []
 }

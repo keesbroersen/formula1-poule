@@ -5,28 +5,22 @@
 	<div class="race-list">
 		<div class="race-list__content">
 			<RaceListItem
-				v-for="(race, index) in filteredRaces"
+				v-for="(race, index) in raceStore.filteredRaces"
 				:key="race.id"
 				:race="race"
-				:is-highlighted="index === 0 && optionValue === 'upcoming'"
+				:is-highlighted="index === 0 && raceStore.filter === 'upcoming'"
 			/>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { useFirestore, useCollection } from "vuefire"
-import { collection } from "firebase/firestore"
-import moment from "moment"
-
 import RaceListItem from "./RaceListItem.vue"
 import SelectButton from "@/elements/SelectButton.vue"
-import { ref, computed } from "vue"
+import { ref } from "vue"
 import ListHeader from "./ListHeader.vue"
-import { Race } from "@/models/race.model"
-
-const db = useFirestore()
-const races = useCollection(collection(db, "races"))
+import { useRaces } from "@/store/races"
+const raceStore = useRaces()
 
 const selectOptions = [
 	{
@@ -43,23 +37,8 @@ const selectOptions = [
 	}
 ]
 
-const optionValue = ref("upcoming")
-
-const filteredRaces = computed(() => {
-	if (optionValue.value === "upcoming") {
-		return races.value.filter((race) =>
-			moment(race.dates.race.toDate()).isSameOrAfter(new Date(), "day")
-		) as Race[]
-	} else if (optionValue.value === "completed") {
-		return races.value.filter((race) =>
-			moment(race.dates.race.toDate()).isBefore(new Date(), "day")
-		) as Race[]
-	}
-	return races.value as Race[]
-})
-
-const onChange = (value: string) => {
-	optionValue.value = value
+const onChange = (value: any) => {
+	raceStore.filter = value
 }
 </script>
 

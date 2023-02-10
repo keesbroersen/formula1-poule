@@ -6,7 +6,7 @@ export class RaceDates {
 }
 
 export class Race {
-	id?: string
+	readonly id?: string
 	circuit: string = ""
 	country: string = ""
 	countryCode: string = ""

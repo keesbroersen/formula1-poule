@@ -57,6 +57,24 @@ export const useTeams = defineStore("teams", () => {
 			})
 	}
 
+	const updateTeamScore = async (teamId: string, points: Array<number>) => {
+		return updateDoc(doc(db_col, teamId), {
+			points
+		})
+			.then()
+			.catch((error) => {
+				throw error
+			})
+	}
+
+	const clearAllTeamScores = async () => {
+		for (const team of teams.value) {
+			updateDoc(doc(db_col, team.id), {
+				points: []
+			})
+		}
+	}
+
 	const removeTeam = async () => {
 		await deleteDoc(doc(db_col, currentTeam.value.id))
 			.then(() => router.push({ path: "/admin/teams" }))
@@ -79,9 +97,11 @@ export const useTeams = defineStore("teams", () => {
 		currentTeam,
 		addTeam,
 		updateTeam,
+		updateTeamScore,
 		removeTeam,
 		setCurrentTeam,
 		clearCurrentTeam,
-		getTeamById
+		getTeamById,
+		clearAllTeamScores
 	}
 })

@@ -49,6 +49,13 @@ const router = createRouter({
 			}
 		},
 		{
+			path: "/standings",
+			component: () => import("../views/CompetitorStandings.vue"),
+			meta: {
+				requiresAuth: true
+			}
+		},
+		{
 			path: "/account",
 			component: () => import("../views/UserAccount.vue"),
 			meta: {

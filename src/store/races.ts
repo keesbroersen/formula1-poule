@@ -13,7 +13,7 @@ import { Race } from "@/models/race.model"
 import moment from "moment"
 import router from "@/services/router"
 import { computed, ComputedRef, Ref, ref, watch } from "vue"
-import { useCollection } from "vuefire"
+import { useCollection, firestoreDefaultConverter } from "vuefire"
 import { usePredictions } from "./predictions"
 import { useResults } from "./results"
 
@@ -32,14 +32,18 @@ export const useRaces = defineStore("races", () => {
 	}
 
 	// Getters
+	const racesSorted: ComputedRef<Race[]> = computed(() =>
+		races.value.sort((a, b) => a.dates.race.seconds - b.dates.race.seconds)
+	)
+
 	const upcomingRaces: ComputedRef<Race[]> = computed(() => {
-		return races.value.filter((race) =>
+		return racesSorted.value.filter((race) =>
 			moment(race.dates.race.toDate()).isSameOrAfter(new Date(), "day")
 		)
 	})
 
 	const completedRaces: ComputedRef<Race[]> = computed(() => {
-		return races.value.filter((race) =>
+		return racesSorted.value.filter((race) =>
 			moment(race.dates.race.toDate()).isBefore(new Date(), "day")
 		)
 	})
@@ -50,7 +54,7 @@ export const useRaces = defineStore("races", () => {
 		} else if (filter.value === "completed") {
 			return completedRaces.value
 		}
-		return races.value
+		return racesSorted.value
 	})
 
 	const getRaceBySlug = (slug: string): Race | undefined => {
@@ -68,11 +72,11 @@ export const useRaces = defineStore("races", () => {
 	})
 
 	const addRace = async () => {
-		await addDoc(db_col, { ...currentRace.value, slug: getSlug.value })
-			.then(() => router.push({ path: "/admin/races" }))
-			.catch((error) => {
-				throw error
-			})
+		// await addDoc(db_col, { ...currentRace.value, slug: getSlug.value })
+		// 	.then(() => router.push({ path: "/admin/races" }))
+		// 	.catch((error) => {
+		// 		throw error
+		// 	})
 	}
 
 	const updateRace = async () => {
@@ -127,6 +131,7 @@ export const useRaces = defineStore("races", () => {
 		filter,
 		setFilter,
 		filteredRaces,
-		clearCurrentRace
+		clearCurrentRace,
+		racesSorted
 	}
 })

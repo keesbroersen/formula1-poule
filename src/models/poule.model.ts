@@ -1,7 +1,7 @@
 import { DocumentReference } from "firebase/firestore"
 
 export class Poule {
-	id?: string
+	readonly id?: string
 	name: string = ""
 	owner: string = ""
 	registration_code: number = 0

@@ -12,9 +12,17 @@
 		<form @submit.prevent="submit" class="form">
 			<router-view />
 
+			<select v-model="resultStore.currentResult.scoreMultiplier">
+				<option value="raced75orMore">75% laps of meer</option>
+				<option value="raced50till75">50% laps tot 75%</option>
+				<option value="raced25till50">25% laps tot 50%</option>
+				<option value="raced2lapstill25">2 laps 25%</option>
+				<option value="lessThan2laps">tot 2 laps</option>
+			</select>
+
 			<StickyBlock>
 				<VueButton :type="isSubmitting ? 'loading' : 'primary'"
-					>Voorspel kwalificatie</VueButton
+					>Sla resultaat op</VueButton
 				>
 			</StickyBlock>
 		</form>

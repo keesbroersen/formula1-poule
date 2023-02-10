@@ -57,6 +57,24 @@ export const useDrivers = defineStore("drivers", () => {
 			})
 	}
 
+	const updateDriverScore = async (driverId: string, points: Array<number>) => {
+		return updateDoc(doc(db_col, driverId), {
+			points
+		})
+			.then(() => router.push({ path: "/admin/drivers" }))
+			.catch((error) => {
+				throw error
+			})
+	}
+
+	const clearAllDriverScores = async () => {
+		for (const driver of drivers.value) {
+			updateDoc(doc(db_col, driver.id), {
+				points: []
+			})
+		}
+	}
+
 	const removeDriver = async () => {
 		await deleteDoc(doc(db_col, currentDriver.value.id))
 			.then(() => router.push({ path: "/admin/drivers" }))
@@ -82,6 +100,8 @@ export const useDrivers = defineStore("drivers", () => {
 		removeDriver,
 		setCurrentDriver,
 		clearCurrentDriver,
-		getDriverById
+		getDriverById,
+		updateDriverScore,
+		clearAllDriverScores
 	}
 })

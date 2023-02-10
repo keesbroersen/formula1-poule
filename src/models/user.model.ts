@@ -1,8 +1,8 @@
 export class User {
-	id?: string
+	readonly id?: string
 	name: string = ""
 	slug: string = ""
-	score: number = 0
+	score: Array<number> = []
 	previousScore: number = 0
 	role: "admin" | "user" = "user"
 	driverChampion: string = ""

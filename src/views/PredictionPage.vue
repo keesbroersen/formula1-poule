@@ -12,7 +12,7 @@
 
 			<StickyBlock>
 				<VueButton :type="isSubmitting ? 'loading' : 'primary'"
-					>Voorspel kwalificatie</VueButton
+					>Voorspel</VueButton
 				>
 			</StickyBlock>
 		</form>
