@@ -1,12 +1,12 @@
 <template>
-	<div v-if="currentRace" class="page--regular">
-		<h2>{{ currentRace?.circuit }}</h2>
-		<div class="page-navigation">
+	<div v-if="currentRace" class="page--race">
+		<PredictionHeader />
+		<MultiPageNavigation>
 			<router-link :to="`/races/${currentRace.slug}/qualification`"
 				>Kwalificatie</router-link
 			>
 			<router-link :to="`/races/${currentRace.slug}/race`">Race</router-link>
-		</div>
+		</MultiPageNavigation>
 		<form @submit.prevent="submit" class="form">
 			<router-view />
 
@@ -31,6 +31,8 @@ import { storeToRefs } from "pinia"
 import StickyBlock from "@/elements/StickyBlock.vue"
 import VueButton from "@/elements/VueButton.vue"
 import { ref } from "vue"
+import PredictionHeader from "@/components/PredictionHeader.vue"
+import MultiPageNavigation from "@/components/MultiPageNavigation.vue"
 
 const raceStore = useRaces()
 const predictionStore = usePredictions()
@@ -41,11 +43,3 @@ const submit = async () => {
 	predictionStore.addPrediction()
 }
 </script>
-
-<style lang="scss">
-.page-navigation {
-	display: flex;
-	gap: 16px;
-	margin: 16px 0;
-}
-</style>

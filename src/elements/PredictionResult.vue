@@ -6,10 +6,11 @@
 		<span class="prediction">{{
 			driverPredicted ? driverPredicted.name : "---"
 		}}</span>
-		<div class="points" :class="{ 'points-none': points < 1 }">
+		<div v-if="predicted" class="points" :class="{ 'points-none': points < 1 }">
 			{{ points }}
 			<small>pt</small>
 		</div>
+		<div v-else class="points"></div>
 	</div>
 </template>
 
@@ -34,8 +35,9 @@ const props = defineProps({
 		type: String
 	},
 	predicted: {
-		required: true,
-		type: String
+		required: false,
+		type: String,
+		default: ""
 	},
 	type: {
 		required: true,
@@ -72,9 +74,9 @@ const points = computed(() => {
 
 	if (
 		driverPredicted.value?.id ===
-			currentResult.value.race[`pos${props.label + 1}`] ||
+			currentResult.value.race[`pos${parseInt(props.label) + 1}`] ||
 		driverPredicted.value?.id ===
-			currentResult.value.race[`pos${props.label - 1}`]
+			currentResult.value.race[`pos${parseInt(props.label) - 1}`]
 	) {
 		return 1
 	}

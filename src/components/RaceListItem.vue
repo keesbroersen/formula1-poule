@@ -74,7 +74,7 @@ const dateUntilNow = computed(() => {
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .race {
 	display: flex;
 	align-items: center;

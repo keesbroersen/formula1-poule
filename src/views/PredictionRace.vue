@@ -1,5 +1,5 @@
 <template>
-	<div v-if="currentPrediction.qualificationScore" class="result">
+	<ResultList v-if="currentPrediction.raceScore">
 		<PredictionResult
 			label="1"
 			type="race"
@@ -60,6 +60,7 @@
 			position="pos10"
 			:predicted="currentPrediction.race.pos10"
 		/>
+		<PredictionResult label="11" type="race" position="pos11" />
 		<PredictionResult
 			label="driverOfTheDay"
 			type="race"
@@ -72,7 +73,7 @@
 			position="fastestLap"
 			:predicted="currentPrediction.race.fastestLap"
 		/>
-	</div>
+	</ResultList>
 	<div v-else>
 		<DriverSelect
 			label="1"
@@ -154,6 +155,7 @@ import { usePredictions } from "@/store/predictions"
 import { storeToRefs } from "pinia"
 import DriverSelect from "@/elements/DriverSelect.vue"
 import PredictionResult from "@/elements/PredictionResult.vue"
+import ResultList from "@/components/ResultList.vue"
 
 const predictionStore = usePredictions()
 const { currentPrediction } = storeToRefs(predictionStore)
