@@ -95,6 +95,21 @@ export const usePredictions = defineStore("predictions", () => {
 		}
 	}
 
+	const updatePredictionScore = async (
+		predictionId: string,
+		qualificationScore: number,
+		raceScore: number
+	) => {
+		return updateDoc(doc(db_col, predictionId), {
+			qualificationScore,
+			raceScore
+		})
+			.then(() => router.push({ path: "/admin/drivers" }))
+			.catch((error) => {
+				throw error
+			})
+	}
+
 	const setCurrentPrediction = async () => {
 		await promise.value
 		const getPredictionByRaceId = predictions.value.find(
@@ -173,6 +188,7 @@ export const usePredictions = defineStore("predictions", () => {
 		predictions,
 		addPrediction,
 		updatePrediction,
-		setCurrentPrediction
+		setCurrentPrediction,
+		updatePredictionScore
 	}
 })

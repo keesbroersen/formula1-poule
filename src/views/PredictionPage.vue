@@ -10,7 +10,12 @@
 		<form @submit.prevent="submit" class="form">
 			<router-view />
 
-			<StickyBlock>
+			<StickyBlock
+				v-if="
+					!predictionStore.currentPrediction.qualificationScore &&
+					!predictionStore.currentPrediction.raceScore
+				"
+			>
 				<VueButton :type="isSubmitting ? 'loading' : 'primary'"
 					>Voorspel</VueButton
 				>

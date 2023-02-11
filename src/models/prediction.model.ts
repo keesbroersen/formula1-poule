@@ -25,6 +25,8 @@ export class Prediction {
 	userId: string | undefined
 	qualification: QualificationPrediction
 	race: RacePrediction
+	qualificationScore?: number
+	raceScore?: number
 
 	constructor() {
 		this.raceId = ""

@@ -15,6 +15,7 @@ import { useRaces } from "./races"
 import { useTeams } from "./teams"
 import { useUsers } from "./users"
 import { useDrivers } from "./drivers"
+import { usePredictions } from "./predictions"
 import { ref, computed, watch, Ref } from "vue"
 import {
 	Prediction,
@@ -247,6 +248,7 @@ export const useResults = defineStore("results", () => {
 	}
 
 	const saveScoreToUsers = async () => {
+		const predictionStore = usePredictions()
 		const q = query(
 			collection(db, "predictions"),
 			where("raceId", "==", currentResult.value.raceId)
@@ -258,8 +260,16 @@ export const useResults = defineStore("results", () => {
 			let score = 0
 
 			// Calculate qualification score
-			score += calculateQualificationResult(prediction)
-			score += calculateRaceResult(prediction)
+			const qualificationScore = calculateQualificationResult(prediction)
+			const raceScore = calculateRaceResult(prediction)
+			score += qualificationScore
+			score += raceScore
+
+			predictionStore.updatePredictionScore(
+				doc.id,
+				qualificationScore,
+				raceScore
+			)
 
 			saveUserScore(prediction.userId, score)
 		})
