@@ -14,7 +14,18 @@ const router = createRouter({
 			component: () => import("../views/UserHome.vue"),
 			meta: {
 				requiresAuth: true
-			}
+			},
+			children: [
+				{
+					path: "predictions",
+					alias: "",
+					component: () => import("../views/UserPredictions.vue")
+				},
+				{
+					path: "poule",
+					component: () => import("../views/UserPoule.vue")
+				}
+			]
 		},
 		{
 			path: "/poule/:slug",
@@ -45,13 +56,6 @@ const router = createRouter({
 		{
 			path: "/poule/share/:id",
 			component: () => import("../views/PouleAddUser.vue"),
-			meta: {
-				requiresAuth: true
-			}
-		},
-		{
-			path: "/standings",
-			component: () => import("../views/CompetitorStandings.vue"),
 			meta: {
 				requiresAuth: true
 			}
@@ -224,6 +228,26 @@ const router = createRouter({
 				{
 					path: "race",
 					component: () => import("../views/PredictionRace.vue")
+				}
+			]
+		},
+
+		{
+			path: "/standings/",
+			component: () => import("../views/CompetitorStandings.vue"),
+			meta: {
+				requiresAuth: true
+			},
+			children: [
+				{
+					path: "drivers",
+					alias: "",
+					component: () => import("../views/CompetitorStandingsDrivers.vue")
+				},
+				{
+					path: "teams",
+					component: () =>
+						import("../views/CompetitorStandingsConstructors.vue")
 				}
 			]
 		}

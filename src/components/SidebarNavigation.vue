@@ -9,15 +9,19 @@
 				<IconTimes />
 			</button>
 		</div>
-		<div v-if="user" class="sidebar-navigation__content">
-			<router-link to="/account">{{ user.name }}</router-link>
-			<router-link to="/standings">Kampioenschap</router-link>
-			<router-link to="/admin" v-if="user.role === 'admin'">Admin</router-link>
-			<a href="#" @click.prevent="usersStore.logoutUser"> Logout </a>
+		<div v-if="user" class="sidebar-navigation__content list">
+			<router-link class="list-item" to="/account">{{ user.name }}</router-link>
+			<router-link class="list-item" to="/standings">Kampioenschap</router-link>
+			<router-link class="list-item" to="/admin" v-if="user.role === 'admin'"
+				>Admin</router-link
+			>
+			<a href="#" class="list-item" @click.prevent="usersStore.logoutUser">
+				Logout
+			</a>
 		</div>
-		<div v-else class="sidebar-navigation__content">
-			<router-link to="/register">Register</router-link> |
-			<router-link to="/login">Login</router-link>
+		<div v-else class="sidebar-navigation__content list">
+			<router-link class="list-item" to="/register">Register</router-link> |
+			<router-link class="list-item" to="/login">Login</router-link>
 		</div>
 	</nav>
 </template>
@@ -70,19 +74,8 @@ const { user } = storeToRefs(usersStore)
 	}
 
 	&__content {
-		display: flex;
-		flex-direction: column;
 		margin: 24px 0 0;
-		border-top: 1px solid var(--background-opacity);
 		height: 100%;
-
-		a {
-			display: flex;
-			align-items: center;
-			border-bottom: 1px solid var(--background-opacity);
-			padding: 0 16px;
-			height: 50px;
-		}
 	}
 
 	&.is-open {

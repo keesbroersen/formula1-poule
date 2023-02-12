@@ -1,5 +1,7 @@
 <template>
-  <div class="page--poule">Poule</div>
+	<PouleList />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import PouleList from "@/components/PouleList.vue"
+</script>

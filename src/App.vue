@@ -215,4 +215,18 @@ input[type="color"]::-webkit-color-swatch {
 	gap: 8px;
 	width: 100%;
 }
+
+.list {
+	display: flex;
+	flex-direction: column;
+	border-top: 1px solid var(--background-opacity);
+}
+
+.list-item {
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid var(--background-opacity);
+	padding: 0 16px;
+	height: 50px;
+}
 </style>
