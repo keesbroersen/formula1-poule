@@ -1,12 +1,21 @@
 <template>
-	<MainNavigation />
-	<Suspense>
-		<router-view />
-	</Suspense>
+	<div
+		class="content"
+		:class="{ 'navigation-is-open': generalStore.navigationOpen }"
+	>
+		<MainNavigation />
+		<Suspense>
+			<router-view />
+		</Suspense>
+	</div>
+	<SidebarNavigation />
 </template>
 
 <script setup lang="ts">
 import MainNavigation from "./components/MainNavigation.vue"
+import SidebarNavigation from "./components/SidebarNavigation.vue"
+import { useGeneral } from "@/store/general"
+const generalStore = useGeneral()
 </script>
 
 <style lang="scss">
@@ -18,6 +27,20 @@ import MainNavigation from "./components/MainNavigation.vue"
 	--background-opacity: rgba(255, 255, 255, 0.15);
 	--general-opacity: rgba(255, 255, 255, 0.4);
 	--font: "Roboto", -apple-system, BlinkMacSystemFont, "Helvetica", sans-serif;
+	--red-gradient: linear-gradient(
+		160deg,
+		var(--background-red) 0,
+		var(--background-black) 80vh
+	);
+	--black-gradient: linear-gradient(
+		180deg,
+		rgba(2, 1, 1, 0.6) 0%,
+		rgba(2, 1, 1, 0) 60px,
+		rgba(38, 38, 38, 0) 25vw,
+		rgba(38, 38, 38, 1) 48vw,
+		rgba(0, 0, 0, 1) 50vh
+	);
+	--navigation-transition: all 0.2s ease-out;
 }
 
 * {
@@ -44,6 +67,14 @@ a {
 	}
 }
 
+.content {
+	transition: var(--navigation-transition);
+
+	&.navigation-is-open {
+		transform: translateX(-100%);
+	}
+}
+
 [class*="page--"] {
 	position: relative;
 	padding-top: 60px; /* space for navigation */
@@ -53,11 +84,7 @@ a {
 .page {
 	&--regular {
 		padding-top: 100px;
-		background: linear-gradient(
-			160deg,
-			var(--background-red) 0,
-			var(--background-black) 80vh
-		);
+		background: var(--red-gradient);
 	}
 
 	&--with-fixed-button {
@@ -66,14 +93,7 @@ a {
 
 	&--race {
 		padding: 0;
-		background: linear-gradient(
-			180deg,
-			rgba(2, 1, 1, 0.6) 0%,
-			rgba(2, 1, 1, 0) 60px,
-			rgba(38, 38, 38, 0) 25vw,
-			rgba(38, 38, 38, 1) 48vw,
-			rgba(0, 0, 0, 1) 50vh
-		);
+		background: var(--black-gradient);
 	}
 
 	&--result {
@@ -177,6 +197,11 @@ input[type="color"]::-webkit-color-swatch {
 	&--form {
 		margin: 12px;
 		width: calc(100vw - 24px);
+	}
+
+	&--clean {
+		padding: 0;
+		background: none;
 	}
 
 	svg {

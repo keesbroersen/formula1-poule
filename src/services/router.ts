@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router"
 import { getCurrentUser } from "vuefire"
+import { useGeneral } from "@/store/general"
 import { useRaces } from "@/store/races"
 import { useDrivers } from "@/store/drivers"
 import { useTeams } from "@/store/teams"
@@ -230,6 +231,9 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
+	const generalStore = useGeneral()
+	generalStore.navigationOpen = false
+
 	if (to.meta.requiresAuth) {
 		const currentUser = await getCurrentUser()
 		if (!currentUser) {
