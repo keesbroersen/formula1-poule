@@ -5,13 +5,13 @@ import { getFirestore, collection } from "firebase/firestore"
 // ... other firebase imports
 
 export const firebaseApp = initializeApp({
-	apiKey: "AIzaSyDXWU-3b0dz5zQ_-37ROR7jPKtA35ZRYfE",
-	authDomain: "formula-1-poule.firebaseapp.com",
-	projectId: "formula-1-poule",
-	storageBucket: "formula-1-poule.appspot.com",
-	messagingSenderId: "100009942199",
-	appId: "1:100009942199:web:b7165f6c2b5838502d4132",
-	measurementId: "G-6EKP4N5L3F"
+	apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+	authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+	projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+	storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+	messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+	appId: process.env.VUE_APP_FIREBASE_APP_ID,
+	measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID
 })
 
 // const analytics = getAnalytics(firebaseApp);
