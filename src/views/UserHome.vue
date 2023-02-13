@@ -1,8 +1,10 @@
 <template>
 	<div class="page--regular">
 		<MultiPageNavigation>
-			<router-link :to="`/`">Voorspellingen</router-link>
-			<router-link :to="`/poule`">Poule</router-link>
+			<router-link :to="{ name: 'UserPredictions' }"
+				>Voorspellingen</router-link
+			>
+			<router-link :to="{ name: 'UserPoule' }">Poule</router-link>
 		</MultiPageNavigation>
 		<router-view />
 	</div>

@@ -38,6 +38,9 @@ const link = computed(() => {
 	if (route.path === "/admin/results") {
 		return `/admin/results/${props.race.slug}`
 	}
+	if (route.name === "PouleUser") {
+		return `${route.path}/${props.race.slug}`
+	}
 	return `races/${props.race.slug}`
 })
 
