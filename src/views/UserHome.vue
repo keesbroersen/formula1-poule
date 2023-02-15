@@ -1,10 +1,10 @@
 <template>
 	<div class="page--regular">
 		<MultiPageNavigation>
-			<router-link :to="{ name: 'UserPredictions' }"
+			<router-link :to="{ name: 'user_predictions' }"
 				>Voorspellingen</router-link
 			>
-			<router-link :to="{ name: 'UserPoule' }">Poule</router-link>
+			<router-link :to="{ name: 'user_poule' }">Poule</router-link>
 		</MultiPageNavigation>
 		<router-view />
 	</div>

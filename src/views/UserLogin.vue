@@ -18,6 +18,12 @@
 			</InputField>
 
 			<p v-if="errMsg">{{ errMsg }}</p>
+
+			<p>
+				Nog geen account?
+				<router-link :to="{ name: 'user_register' }">Registreer</router-link>
+			</p>
+
 			<StickyBlock>
 				<VueButton :type="isLoggingIn ? 'loading' : 'primary'">Login</VueButton>
 			</StickyBlock>

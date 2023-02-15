@@ -75,8 +75,7 @@ export const useUsers = defineStore("users", () => {
 		setDoc(doc(db, "users", uid), {
 			name,
 			slug,
-			score: 0,
-			previousScore: 0,
+			score: [],
 			role: "user",
 			driverChampion: "",
 			constructorsChampion: ""

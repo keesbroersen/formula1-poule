@@ -1,6 +1,6 @@
 <template>
 	<nav class="sidebar-navigation" :class="{ 'is-open': navigationOpen }">
-		<div v-if="user" class="sidebar-navigation__header">
+		<div class="sidebar-navigation__header">
 			<router-link to="/"><IconLogo class="logo" /></router-link>
 			<button
 				@click="navigationOpen = false"

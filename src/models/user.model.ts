@@ -7,3 +7,9 @@ export class User {
 	driverChampion: string = ""
 	constructorsChampion: string = ""
 }
+
+export interface UserWithPoints extends User {
+	lastPointsGained: number
+	positionsGained: number
+	pointsTotal: number
+}

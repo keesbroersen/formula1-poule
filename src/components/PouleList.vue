@@ -4,8 +4,9 @@
 	</ListHeader>
 	<div v-if="poules.length" class="poule-list">
 		<PouleListItem
-			v-for="user in currentPoule?.users"
+			v-for="(user, index) in users"
 			:user="user"
+			:index="index"
 			:key="user.id"
 		/>
 		<div>
@@ -32,6 +33,8 @@ import ListHeader from "./ListHeader.vue"
 import SelectButton from "@/elements/SelectButton.vue"
 import { pouleLink } from "@/composables/functions"
 import PouleListItem from "./PouleListItem.vue"
+import { getPoints } from "@/composables/getters"
+import { UserWithPoints } from "@/models/user.model"
 
 const pouleStore = usePoules()
 const { currentPoule, poules } = storeToRefs(pouleStore)
@@ -48,6 +51,37 @@ const selectOptions = computed(() =>
 const onChange = (value: string) => {
 	pouleStore.currentPouleId = value
 }
+
+const users = computed(() => {
+	const users = currentPoule.value?.users.map((user) => {
+		return {
+			...user,
+			pointsTotal: getPoints(user.score),
+			lastPointsGained: user.score[user.score.length - 1]
+		} as UserWithPoints
+	})
+
+	const previousSort = [...users]
+	const currentSort = [...users]
+
+	previousSort.sort((a, b) => {
+		const previousScoreA = a.pointsTotal - a.lastPointsGained
+		const previousScoreB = b.pointsTotal - b.lastPointsGained
+		return previousScoreB - previousScoreA
+	})
+
+	currentSort.sort((a, b) => b.pointsTotal - a.pointsTotal)
+
+	const result = currentSort.map((user, index) => {
+		return {
+			...user,
+			positionsGained:
+				previousSort.findIndex((u) => u.slug === user.slug) - index
+		}
+	})
+
+	return result
+})
 </script>
 
 <style scoped lang="scss">

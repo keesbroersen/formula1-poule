@@ -56,7 +56,7 @@ export const usePoules = defineStore("poules", () => {
 			registration_code: Math.floor(Math.random() * 8999 + 1000)
 		} as Poule
 
-		payload.users[0] = doc(db, "users", user.value.uid)
+		payload.users[0] = doc(db, "users", user.value.uid) as unknown as User
 
 		try {
 			addDoc(db_col, payload)

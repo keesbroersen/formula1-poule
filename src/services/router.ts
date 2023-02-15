@@ -11,7 +11,7 @@ const router = createRouter({
 	routes: [
 		{
 			path: "/",
-			name: "UserHome",
+			name: "user_home",
 			component: () => import("../views/UserHome.vue"),
 			meta: {
 				requiresAuth: true
@@ -19,20 +19,20 @@ const router = createRouter({
 			children: [
 				{
 					path: "predictions",
-					alias: "",
-					name: "UserPredictions",
+					alias: "/",
+					name: "user_predictions",
 					component: () => import("../views/UserPredictions.vue")
 				},
 				{
 					path: "poule",
-					name: "UserPoule",
+					name: "user_poule",
 					component: () => import("../views/UserPoule.vue")
 				}
 			]
 		},
 		{
 			path: "/poule/:slug",
-			name: "PouleUser",
+			name: "poule_user",
 			component: () => import("../views/PouleUser.vue"),
 			meta: {
 				requiresAuth: true,
@@ -45,7 +45,7 @@ const router = createRouter({
 		},
 		{
 			path: "/poule/:slug/:raceSlug",
-			name: "PouleUserPrediction",
+			name: "poule_userPrediction",
 			component: () => import("../views/PredictionPage.vue"),
 			meta: {
 				requiresAuth: true
@@ -60,19 +60,19 @@ const router = createRouter({
 				{
 					path: "qualification",
 					alias: "",
-					name: "PouleUserQualification",
+					name: "poule_user_qualification",
 					component: () => import("../views/PredictionQualification.vue")
 				},
 				{
 					path: "race",
-					name: "PouleUserRace",
+					name: "poule_user_race",
 					component: () => import("../views/PredictionRace.vue")
 				}
 			]
 		},
 		{
 			path: "/poule/register",
-			name: "PouleRegister",
+			name: "poule_register",
 			component: () => import("../views/PouleRegister.vue"),
 			meta: {
 				requiresAuth: true
@@ -80,7 +80,7 @@ const router = createRouter({
 		},
 		{
 			path: "/poule/share/:id",
-			name: "PouleAddUser",
+			name: "poule_add_user",
 			component: () => import("../views/PouleAddUser.vue"),
 			meta: {
 				requiresAuth: true
@@ -88,7 +88,7 @@ const router = createRouter({
 		},
 		{
 			path: "/account",
-			name: "UserAccount",
+			name: "user_account",
 			component: () => import("../views/UserAccount.vue"),
 			meta: {
 				requiresAuth: true
@@ -96,17 +96,17 @@ const router = createRouter({
 		},
 		{
 			path: "/register",
-			name: "UserRegister",
+			name: "user_register",
 			component: () => import("../views/UserRegister.vue")
 		},
 		{
 			path: "/login",
-			name: "UserLogin",
+			name: "user_login",
 			component: () => import("../views/UserLogin.vue")
 		},
 		{
 			path: "/admin",
-			name: "AdminHome",
+			name: "admin_home",
 			component: () => import("../views/admin/AdminHome.vue"),
 			meta: {
 				requiresAuth: true,
@@ -115,7 +115,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/races",
-			name: "AdminRaces",
+			name: "admin_races",
 			component: () => import("../views/admin/AdminRaces.vue"),
 			meta: {
 				requiresAuth: true,
@@ -124,7 +124,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/races/new",
-			name: "AdminRaceNew",
+			name: "admin_race_new",
 			component: () => import("../views/admin/AdminRace.vue"),
 			meta: {
 				requiresAuth: true,
@@ -137,7 +137,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/races/:slug",
-			name: "AdminRace",
+			name: "admin_race",
 			component: () => import("../views/admin/AdminRace.vue"),
 			meta: {
 				requiresAuth: true,
@@ -150,7 +150,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/results",
-			name: "AdminResults",
+			name: "admin_results",
 			component: () => import("../views/admin/AdminResults.vue"),
 			meta: {
 				requiresAuth: true,
@@ -159,7 +159,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/results/:slug",
-			name: "AdminResult",
+			name: "admin_result",
 			component: () => import("../views/admin/AdminResult.vue"),
 			meta: {
 				requiresAuth: true
@@ -172,19 +172,19 @@ const router = createRouter({
 				{
 					path: "qualification",
 					alias: "",
-					name: "AdminResultQualification",
+					name: "admin_result_qualification",
 					component: () => import("../views/admin/AdminResultQualification.vue")
 				},
 				{
 					path: "race",
-					name: "AdminResultRace",
+					name: "admin_result_race",
 					component: () => import("../views/admin/AdminResultRace.vue")
 				}
 			]
 		},
 		{
 			path: "/admin/teams",
-			name: "AdminTeams",
+			name: "admin_teams",
 			component: () => import("../views/admin/AdminTeams.vue"),
 			meta: {
 				requiresAuth: true,
@@ -193,7 +193,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/teams/new",
-			name: "AdminTeamNew",
+			name: "admin_team_new",
 			component: () => import("../views/admin/AdminTeam.vue"),
 			meta: {
 				requiresAuth: true,
@@ -206,7 +206,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/teams/:slug",
-			name: "AdminTeam",
+			name: "admin_team",
 			component: () => import("../views/admin/AdminTeam.vue"),
 			meta: {
 				requiresAuth: true,
@@ -219,7 +219,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/drivers/new",
-			name: "AdminDriver",
+			name: "admin_driver_new",
 			component: () => import("../views/admin/AdminDriver.vue"),
 			meta: {
 				requiresAuth: true,
@@ -232,7 +232,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/drivers/:slug",
-			name: "AdminDriver",
+			name: "admin_driver",
 			component: () => import("../views/admin/AdminDriver.vue"),
 			meta: {
 				requiresAuth: true,
@@ -245,7 +245,7 @@ const router = createRouter({
 		},
 		{
 			path: "/admin/drivers",
-			name: "AdminDrivers",
+			name: "admin_drivers",
 			component: () => import("../views/admin/AdminDrivers.vue"),
 			meta: {
 				requiresAuth: true,
@@ -254,7 +254,7 @@ const router = createRouter({
 		},
 		{
 			path: "/races/:slug",
-			name: "PredictionPage",
+			name: "prediction_page",
 			component: () => import("../views/PredictionPage.vue"),
 			meta: {
 				requiresAuth: true
@@ -267,19 +267,19 @@ const router = createRouter({
 				{
 					path: "qualification",
 					alias: "",
-					name: "PredictionQualification",
+					name: "prediction_qualification",
 					component: () => import("../views/PredictionQualification.vue")
 				},
 				{
 					path: "race",
-					name: "PredictionRace",
+					name: "prediction_race",
 					component: () => import("../views/PredictionRace.vue")
 				}
 			]
 		},
 		{
 			path: "/standings/",
-			name: "CompetitorStandings",
+			name: "competitor_standings",
 			component: () => import("../views/CompetitorStandings.vue"),
 			meta: {
 				requiresAuth: true
@@ -288,12 +288,12 @@ const router = createRouter({
 				{
 					path: "drivers",
 					alias: "",
-					name: "CompetitorStandingsDrivers",
+					name: "competitor_standings_drivers",
 					component: () => import("../views/CompetitorStandingsDrivers.vue")
 				},
 				{
 					path: "teams",
-					name: "CompetitorStandingsConstructors",
+					name: "competitor_standings_constructors",
 					component: () =>
 						import("../views/CompetitorStandingsConstructors.vue")
 				}
