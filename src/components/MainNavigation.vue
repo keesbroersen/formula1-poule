@@ -3,7 +3,7 @@
 		class="main-navigation container"
 		:class="{ 'navigation-is-open': navigationOpen }"
 	>
-		<router-link :to="{ name: 'user_home' }"
+		<router-link :to="{ name: 'user_predictions' }"
 			><IconLogo class="logo"
 		/></router-link>
 		<button

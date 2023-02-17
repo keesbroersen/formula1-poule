@@ -43,7 +43,8 @@ import { computed } from "vue"
 const props = defineProps({
 	points: {
 		type: Number,
-		required: true
+		required: false,
+		default: 0
 	}
 })
 

@@ -7,25 +7,36 @@
 		<CountryFlag :countryCode="race.countryCode" />
 		<div class="race__header">
 			<p class="title">{{ race.circuit }} - {{ race.country }}</p>
-			<p class="date">{{ dateTimeFormatted }}</p>
+			<p class="date" v-if="!totalScore">{{ dateTimeFormatted }}</p>
+			<IconPoints v-else :points="totalScore" />
 		</div>
 
 		<div class="race__footer" v-if="isHighlighted">
-			<p v-if="qualificationFilled">Quali ✓</p>
-			<p v-if="raceFilled">race ✓</p>
-			<p class="points">score</p>
-			<p class="next-session">{{ dateUntilNow }}</p>
+			<IconPoints v-if="totalScore" :points="totalScore" />
+			<IconPoints
+				v-else-if="thisPrediction?.qualificationScore"
+				:points="thisPrediction?.qualificationScore"
+			/>
+			<IconCheck
+				v-if="qualificationFilled && !thisPrediction?.qualificationScore"
+				:check="true"
+				content="Q"
+			/>
+			<IconCheck v-if="raceFilled && !totalScore" :check="true" content="R" />
+			<p class="next-session" v-html="nextSession"></p>
 		</div>
 	</router-link>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from "vue"
-import { Race } from "@/models/race.model"
+import { Race, RaceDates } from "@/models/race.model"
 import { usePredictions } from "@/store/predictions"
 import CountryFlag from "@/elements/CountryFlag.vue"
 import moment from "moment"
 import { useRoute } from "vue-router"
+import IconPoints from "@/elements/IconPoints.vue"
+import IconCheck from "@/elements/IconCheck.vue"
 const route = useRoute()
 moment.locale("nl")
 
@@ -45,7 +56,10 @@ const link = computed(() => {
 })
 
 const race = ref(props.race)
-const date = ref(race.value?.dates?.race.toDate())
+const dateType = ref("race")
+const date = computed(() =>
+	race.value?.dates?.[dateType.value as keyof RaceDates]?.toDate()
+)
 const dateTimeFormatted = computed(() => {
 	return date.value.toLocaleString("nl-NL", {
 		hour: "numeric",
@@ -72,8 +86,37 @@ const raceFilled = computed(() => {
 	return Object.entries(thisPrediction.value.race).every((item) => item[1])
 })
 
+const totalScore = computed(() => {
+	if (!thisPrediction.value?.raceScore) return
+	const qualiScore = thisPrediction.value?.qualificationScore || 0
+	return qualiScore + thisPrediction.value?.raceScore
+})
+
 const dateUntilNow = computed(() => {
 	return moment(date.value).fromNow()
+})
+
+const nextSession = computed(() => {
+	const closestToNow = Object.keys(race.value.dates)
+		.filter(function (a) {
+			const sum =
+				Number(race.value.dates[a as keyof RaceDates].toDate()) -
+				Number(new Date())
+			return sum > 0
+		})
+		.shift()
+
+	if (totalScore.value) {
+		return "Race <span>beëindigd</span>"
+	}
+
+	if (!closestToNow && !totalScore.value) {
+		return "Race <span>onderweg</span>"
+	}
+
+	return `${closestToNow === "qualification" ? "kwalificatie" : "race"} <span>${
+		dateUntilNow.value
+	}</span>`
 })
 </script>
 
@@ -90,6 +133,12 @@ const dateUntilNow = computed(() => {
 		display: flex;
 		align-items: center;
 		width: 100%;
+	}
+
+	&__header {
+		.icon-points {
+			margin-left: auto;
+		}
 	}
 
 	&__footer {

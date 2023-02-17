@@ -9,10 +9,18 @@
 			:index="index"
 			:key="user.id"
 		/>
-		<div>
-			Mensen uitnodigen via: <a :href="pouleLink">{{ pouleLink }}</a>
+
+		<div class="buttons container">
+			<VueButton @click="copyInviteLink">{{ copyInviteLinkText }}</VueButton>
+			<a
+				:href="`whatsapp://send?text=Doe mee in onze poule! Ga naar ${pouleLink}`"
+				class="button button--secondary"
+				>Uitnodigen via Whatsapp</a
+			>
+			<RouterLink to="/poule/register" class="button button--secondary"
+				>Nieuw poule</RouterLink
+			>
 		</div>
-		<RouterLink to="/poule/register">Maak een nieuw poule</RouterLink>
 	</div>
 	<div v-else class="no-poule container">
 		<p>
@@ -28,13 +36,14 @@
 <script setup lang="ts">
 import { usePoules } from "@/store/poules"
 import { storeToRefs } from "pinia"
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import ListHeader from "./ListHeader.vue"
 import SelectButton from "@/elements/SelectButton.vue"
 import { pouleLink } from "@/composables/functions"
 import PouleListItem from "./PouleListItem.vue"
 import { getPoints } from "@/composables/getters"
 import { UserWithPoints } from "@/models/user.model"
+import VueButton from "@/elements/VueButton.vue"
 
 const pouleStore = usePoules()
 const { currentPoule, poules } = storeToRefs(pouleStore)
@@ -50,6 +59,21 @@ const selectOptions = computed(() =>
 
 const onChange = (value: string) => {
 	pouleStore.currentPouleId = value
+}
+
+const copyInviteLinkText = ref("Uitnodigen via link")
+const copyInviteLink = () => {
+	navigator.clipboard.writeText(pouleLink.value).then(
+		() => {
+			copyInviteLinkText.value = "Gekopieerd naar klembord!"
+		},
+		() => {
+			copyInviteLinkText.value = "Er ging iets fout"
+		}
+	)
+	setTimeout(() => {
+		copyInviteLinkText.value = "Uitnodigen via link"
+	}, 2000)
 }
 
 const users = computed(() => {
@@ -101,5 +125,13 @@ const users = computed(() => {
 		display: flex;
 		flex-direction: column;
 	}
+}
+
+.buttons {
+	margin-top: 16px;
+}
+
+.button {
+	margin-top: 8px;
 }
 </style>
