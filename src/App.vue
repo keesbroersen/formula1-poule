@@ -87,17 +87,19 @@ a {
 		background: var(--red-gradient);
 	}
 
-	&--with-fixed-button {
-		padding-bottom: 74px;
-	}
-
 	&--race {
+		display: flex;
+		flex-direction: column;
 		padding: 0;
 		background: var(--black-gradient);
 	}
 
 	&--result {
 		padding: 100px 0 0;
+	}
+
+	&--with-fixed-button {
+		padding-bottom: 74px;
 	}
 }
 

@@ -10,16 +10,14 @@
 		<form @submit.prevent="submit" class="form">
 			<router-view />
 
-			<StickyBlock
+			<VueButton
 				v-if="
 					!predictionStore.currentPrediction.qualificationScore &&
 					!predictionStore.currentPrediction.raceScore
 				"
+				:type="isSubmitting ? 'loading' : 'primary'"
+				>Voorspel</VueButton
 			>
-				<VueButton :type="isSubmitting ? 'loading' : 'primary'"
-					>Voorspel</VueButton
-				>
-			</StickyBlock>
 		</form>
 	</div>
 </template>
@@ -28,7 +26,6 @@
 import { useRaces } from "@/store/races"
 import { usePredictions } from "@/store/predictions"
 import { storeToRefs } from "pinia"
-import StickyBlock from "@/elements/StickyBlock.vue"
 import VueButton from "@/elements/VueButton.vue"
 import { ref } from "vue"
 import PredictionHeader from "@/components/PredictionHeader.vue"
@@ -43,3 +40,13 @@ const submit = async () => {
 	predictionStore.addPrediction()
 }
 </script>
+
+<style scoped>
+.form {
+	flex: 1;
+}
+.button {
+	margin: auto 12px 12px;
+	width: calc(100% - 24px);
+}
+</style>
