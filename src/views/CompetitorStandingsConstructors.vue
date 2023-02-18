@@ -1,8 +1,11 @@
 <template>
 	<div class="list">
-		<div v-for="team in teamsSortedByPoints" :key="team.id" class="list-item">
-			{{ team.name }} - {{ getPoints(team.points) }}
-		</div>
+		<PouleListItem
+			v-for="(team, index) in teams"
+			:user="team"
+			:index="index"
+			:key="team.id"
+		/>
 	</div>
 </template>
 
@@ -10,10 +13,39 @@
 import { useTeams } from "@/store/teams"
 import { computed } from "vue"
 import { getPoints } from "@/composables/getters"
+import { TeamWithPoints } from "@/models/team.model"
+import PouleListItem from "@/components/PouleListItem.vue"
 
 const teamsStore = useTeams()
-const teamsSortedByPoints = computed(() => {
-	const list = teamsStore.teams
-	return list.sort((a, b) => getPoints(b.points) - getPoints(a.points))
+
+const teams = computed(() => {
+	const teams = teamsStore.teams.map((team) => {
+		return {
+			...team,
+			pointsTotal: getPoints(team.points),
+			lastPointsGained: team.points[team.points.length - 1]
+		} as TeamWithPoints
+	})
+
+	const previousSort = [...teams]
+	const currentSort = [...teams]
+
+	previousSort.sort((a, b) => {
+		const previousScoreA = a.pointsTotal - a.lastPointsGained
+		const previousScoreB = b.pointsTotal - b.lastPointsGained
+		return previousScoreB - previousScoreA
+	})
+
+	currentSort.sort((a, b) => b.pointsTotal - a.pointsTotal)
+
+	const result = currentSort.map((team, index) => {
+		return {
+			...team,
+			positionsGained:
+				previousSort.findIndex((u) => u.slug === team.slug) - index
+		}
+	})
+
+	return result
 })
 </script>

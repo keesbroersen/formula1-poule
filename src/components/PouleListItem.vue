@@ -6,7 +6,9 @@
 	>
 		<p>{{ index + 1 }}</p>
 		<span class="position-indicator" />
-		<p class="name">{{ props.user.name }}</p>
+		<p class="name">
+			{{ props.user.name }}
+		</p>
 		<p
 			class="positions-gained"
 			:class="{
@@ -29,9 +31,11 @@
 
 <script setup lang="ts">
 import { UserWithPoints } from "@/models/user.model"
+import { DriverWithPoints } from "@/models/driver.model"
+import { TeamWithPoints } from "@/models/team.model"
 
 const props = defineProps<{
-	user: UserWithPoints
+	user: UserWithPoints | DriverWithPoints | TeamWithPoints
 	index: number
 }>()
 </script>
@@ -65,11 +69,6 @@ const props = defineProps<{
 	height: 50px;
 	border-bottom: 1px solid var(--background-opacity);
 }
-
-.poule-list-item:first-child {
-	border-top: 1px solid var(--background-opacity);
-}
-
 .position-indicator {
 	height: 36px;
 	width: 4px;

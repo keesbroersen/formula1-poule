@@ -6,3 +6,9 @@ export class Team {
 	slug: string = ""
 	points: Array<number> = []
 }
+
+export interface TeamWithPoints extends Team {
+	lastPointsGained: number
+	positionsGained: number
+	pointsTotal: number
+}

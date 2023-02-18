@@ -6,3 +6,9 @@ export class Driver {
 	teamId: string = ""
 	points: Array<number> = []
 }
+
+export interface DriverWithPoints extends Driver {
+	lastPointsGained: number
+	positionsGained: number
+	pointsTotal: number
+}
