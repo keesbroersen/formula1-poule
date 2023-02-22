@@ -10,6 +10,7 @@
 			v-model="selectValue"
 			:reduce="(driver: Driver) => driver.id"
 			:components="{ Deselect: IconTimes, OpenIndicator: IconChevronDown }"
+			:placeholder="placeholder"
 		>
 			<template #selected-option="{ label, color }">
 				<div class="team-indicator" :style="{ backgroundColor: color }"></div>
@@ -40,6 +41,13 @@ import IconStar from "@/assets/IconStar.vue"
 import IconStopwatch from "@/assets/IconStopwatch.vue"
 import IconTimes from "@/assets/IconTimes.vue"
 import IconChevronDown from "@/assets/IconChevronDown.vue"
+
+type Option = {
+	label: string
+	id: string
+	isPicked: boolean
+	color: string
+}
 
 const predictionStore = usePredictions()
 const teamsStore = useTeams()
@@ -74,13 +82,6 @@ const selectValue = computed({
 	}
 })
 
-type Option = {
-	label: string
-	id: string
-	isPicked: boolean
-	color: string
-}
-
 const checkIfIsPicked = (
 	pickedForQualification: string | undefined,
 	pickedForRace: string | undefined,
@@ -105,6 +106,17 @@ const checkIfIsPicked = (
 	}
 	return true
 }
+
+const placeholder = computed(() => {
+	switch (props.label) {
+		case "fastestLap":
+			return "Kies coureur voor snelste ronde"
+		case "driverOfTheDay":
+			return "Kies driver of the day"
+		default:
+			return "Kies coureur"
+	}
+})
 
 const options = computed(() =>
 	getPredictionDrivers.value.map(
@@ -173,6 +185,10 @@ const options = computed(() =>
 
 	&__search {
 		text-indent: 12px;
+
+		&::placeholder {
+			color: var(--general-opacity);
+		}
 	}
 
 	&__dropdown-menu {
@@ -187,7 +203,12 @@ const options = computed(() =>
 	}
 
 	&__actions {
+		padding-right: 16px;
 		opacity: 0.4;
+	}
+
+	&__clear {
+		margin-right: 12px;
 	}
 }
 
