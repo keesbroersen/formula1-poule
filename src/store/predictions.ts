@@ -17,6 +17,7 @@ import { useRaces } from "./races"
 import router from "@/services/router"
 import { useDrivers } from "./drivers"
 import { ref, computed, watch, Ref, ComputedRef } from "vue"
+import { getPoints } from "@/composables/getters"
 
 const db = useFirestore()
 const db_col = collection(db, "predictions")
@@ -35,7 +36,10 @@ export const usePredictions = defineStore("predictions", () => {
 	// Getters
 	const getPredictionDrivers = computed(() => {
 		const driverStore = useDrivers()
-		return driverStore.drivers.map((driver) => {
+		const drivers = [...driverStore.drivers].sort(
+			(a, b) => getPoints(b.points) - getPoints(a.points)
+		)
+		return drivers.map((driver) => {
 			const pickedForDriverOfTheDay =
 				currentPrediction.value.race.driverOfTheDay === driver.id
 			const pickedForFastestLap =
