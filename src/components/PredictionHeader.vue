@@ -66,14 +66,33 @@ const raceDate = computed(() => {
 <style lang="scss" scoped>
 .prediction-header {
 	position: relative;
+	display: flex;
+	align-items: flex-end;
 	margin-bottom: 16px;
-	padding-top: 48vw;
+	padding: 0 0 8px;
+	aspect-ratio: 16/9;
+	max-height: 350px;
+	width: 100%;
+
+	&:before {
+		content: "";
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		background: linear-gradient(
+			180deg,
+			rgba(0, 0, 0, 0.8) 0%,
+			rgba(0, 0, 0, 0) 90px,
+			rgba(0, 0, 0, 0) 60%,
+			rgb(0, 0, 0) 93%,
+			rgb(0, 0, 0) 100%
+		);
+	}
 }
 
 .content {
-	position: absolute;
-	left: 0;
-	bottom: 8px;
 	display: grid;
 	grid-auto-columns: 1fr 45px;
 	grid-auto-rows: auto auto;
@@ -86,8 +105,9 @@ const raceDate = computed(() => {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 48vw;
+	height: 100%;
 	z-index: -1;
+	object-fit: cover;
 }
 
 .title {

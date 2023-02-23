@@ -91,7 +91,7 @@ a {
 		display: flex;
 		flex-direction: column;
 		padding: 0;
-		background: var(--black-gradient);
+		// background: var(--black-gradient);
 	}
 
 	&--result {

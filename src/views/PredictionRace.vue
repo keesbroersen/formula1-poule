@@ -74,7 +74,7 @@
 			:predicted="currentPrediction.race.fastestLap"
 		/>
 	</ResultList>
-	<div v-else>
+	<div v-else class="list">
 		<DriverSelect
 			label="1"
 			position="pos1"
