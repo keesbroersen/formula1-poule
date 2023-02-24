@@ -8,7 +8,7 @@
 			v-model="selectValue"
 			:reduce="(driver: Driver) => driver.id"
 			:components="{ Deselect: IconTimes, OpenIndicator: IconChevronDown }"
-			:placeholder="placeholder"
+			placeholder="Kies constructeur"
 		>
 			<template #selected-option="{ label, color }">
 				<div class="team-indicator" :style="{ backgroundColor: color }"></div>
@@ -28,37 +28,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h } from "vue"
+import { computed } from "vue"
 import vSelect from "vue-select"
 import "vue-select/dist/vue-select.css"
-import { usePredictions } from "@/store/predictions"
 import { useTeams } from "@/store/teams"
-import { storeToRefs } from "pinia"
 import { Driver } from "@/models/driver.model"
+import { getLabelComponent } from "@/composables/getters"
 import IconTimes from "@/assets/IconTimes.vue"
 import IconChevronDown from "@/assets/IconChevronDown.vue"
-import { getLabelComponent } from "@/composables/getters"
 
 type Option = {
 	label: string
 	id: string
-	isPicked: boolean
 	color: string
 }
 
-const predictionStore = usePredictions()
 const teamsStore = useTeams()
-const { getPredictionDrivers } = storeToRefs(predictionStore)
 
 const props = defineProps({
-	position: {
-		required: true,
-		type: String
-	},
-	type: {
-		required: true,
-		type: String
-	},
 	label: {
 		required: true,
 		type: String
@@ -79,66 +66,14 @@ const selectValue = computed({
 	}
 })
 
-const checkIfIsPicked = (
-	pickedForQualification: string | undefined,
-	pickedForRace: string | undefined,
-	pickedForDriverOfTheDay: boolean,
-	pickedForFastestLap: boolean
-): boolean => {
-	if (props.position === "fastestLap") {
-		return pickedForFastestLap
-	}
-
-	if (props.position === "driverOfTheDay") {
-		return pickedForDriverOfTheDay
-	}
-
-	if (
-		(props.type === "qualification" && !pickedForQualification) ||
-		(pickedForQualification && !pickedForQualification.includes("pos")) ||
-		(props.type === "race" && !pickedForRace) ||
-		(pickedForRace && !pickedForRace.includes("pos"))
-	) {
-		return false
-	}
-	return true
-}
-
-const placeholder = computed(() => {
-	switch (props.label) {
-		case "fastestLap":
-			return "Kies coureur voor snelste ronde"
-		case "driverOfTheDay":
-			return "Kies driver of the day"
-		default:
-			return "Kies coureur"
-	}
-})
-
 const options = computed(() =>
-	getPredictionDrivers.value.map(
-		({
-			name,
-			id,
-			teamId,
-			pickedForQualification,
-			pickedForRace,
-			pickedForDriverOfTheDay,
-			pickedForFastestLap
-		}): Option => {
-			return {
-				label: name,
-				id,
-				color: teamsStore.getTeamById(teamId)?.color || "transparant",
-				isPicked: checkIfIsPicked(
-					pickedForQualification,
-					pickedForRace,
-					pickedForDriverOfTheDay,
-					pickedForFastestLap
-				)
-			}
+	teamsStore.teams.map((team): Option => {
+		return {
+			label: team.name,
+			id: team.id,
+			color: team.color
 		}
-	)
+	})
 )
 </script>
 

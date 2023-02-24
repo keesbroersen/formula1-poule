@@ -18,6 +18,8 @@ import router from "@/services/router"
 import { useDrivers } from "./drivers"
 import { ref, computed, watch, Ref, ComputedRef } from "vue"
 import { getPoints } from "@/composables/getters"
+import { Driver } from "@/models/driver.model"
+import { Team } from "@/models/team.model"
 
 const db = useFirestore()
 const db_col = collection(db, "predictions")
@@ -114,6 +116,24 @@ export const usePredictions = defineStore("predictions", () => {
 			})
 	}
 
+	// Season prediction
+	const addSeasonPrediction = async (
+		driverId: Driver["id"],
+		teamId: Team["id"]
+	) => {
+		console.log({ driverId, teamId })
+		// try {
+		// 	if (currentPrediction.value.id) return updatePrediction()
+		// 	const payload = JSON.parse(JSON.stringify({ ...currentPrediction.value }))
+		// 	delete payload.id
+		// 	await addDoc(db_col, payload)
+		// 	router.push({ path: "/" })
+		// } catch (error) {
+		// 	console.log(error)
+		// 	throw error
+		// }
+	}
+
 	const setCurrentPrediction = async () => {
 		await promise.value
 		const getPredictionByRaceId = predictions.value.find(
@@ -193,6 +213,7 @@ export const usePredictions = defineStore("predictions", () => {
 		addPrediction,
 		updatePrediction,
 		setCurrentPrediction,
-		updatePredictionScore
+		updatePredictionScore,
+		addSeasonPrediction
 	}
 })

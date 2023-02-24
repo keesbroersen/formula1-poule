@@ -6,7 +6,9 @@
 	>
 		<CountryFlag :countryCode="race.countryCode" />
 		<div class="race__header">
-			<p class="title">{{ race.circuit }} - {{ race.country }}</p>
+			<p class="title">
+				{{ race.country }}<small>{{ race.circuit }}</small>
+			</p>
 			<p class="date" v-if="!totalScore">{{ dateTimeFormatted }}</p>
 			<IconPoints v-else :points="totalScore" />
 		</div>
@@ -165,16 +167,33 @@ const nextSession = computed(() => {
 
 .title {
 	margin-left: 12px;
+
+	small {
+		margin-left: 8px;
+		font-size: 13px;
+		color: var(--general-opacity);
+
+		@media screen and (max-width: 768px) {
+			display: flex;
+			margin: 4px 0 0;
+			width: 100%;
+		}
+	}
 }
 
 .date,
 .next-session {
 	margin-left: auto;
+	text-align: right;
 }
 
 .date,
 p span {
 	color: var(--general-opacity);
+}
+
+.date {
+	min-width: 110px;
 }
 
 .points {
