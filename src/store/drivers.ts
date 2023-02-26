@@ -2,7 +2,6 @@ import { defineStore } from "pinia"
 import {
 	getFirestore,
 	collection,
-	getDocs,
 	addDoc,
 	deleteDoc,
 	updateDoc,

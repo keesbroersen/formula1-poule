@@ -163,6 +163,16 @@ export const useUsers = defineStore("users", () => {
 		})
 	}
 
+	const clearAllUserScores = async () => {
+		const users = await getDocs(db_col)
+		users.forEach((userDoc) => {
+			const userId = userDoc.id
+			updateDoc(doc(db_col, userId), {
+				score: []
+			})
+		})
+	}
+
 	return {
 		user,
 		userLoading,
@@ -175,6 +185,7 @@ export const useUsers = defineStore("users", () => {
 		removeUser,
 		updateUserScore,
 		getUserById,
-		updateUserWithSeasonPrediction
+		updateUserWithSeasonPrediction,
+		clearAllUserScores
 	}
 })

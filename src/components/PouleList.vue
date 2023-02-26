@@ -81,7 +81,7 @@ const users = computed(() => {
 		return {
 			...user,
 			pointsTotal: getPoints(user.score),
-			lastPointsGained: user.score[user.score.length - 1]
+			lastPointsGained: user.score[user.score.length - 1] || 0
 		} as UserWithPoints
 	})
 
