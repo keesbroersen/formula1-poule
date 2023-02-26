@@ -6,6 +6,7 @@
 		<MainNavigation />
 		<Suspense>
 			<router-view />
+			<template #fallback> Loading... </template>
 		</Suspense>
 	</div>
 	<SidebarNavigation />

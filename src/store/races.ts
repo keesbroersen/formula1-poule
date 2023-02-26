@@ -33,7 +33,10 @@ export const useRaces = defineStore("races", () => {
 
 	// Getters
 	const racesSorted: ComputedRef<Race[]> = computed(() =>
-		races.value.sort((a, b) => a.dates.race.seconds - b.dates.race.seconds)
+		races.value.sort(
+			(a, b) =>
+				a.dates.qualification.toMillis() - b.dates.qualification.toMillis()
+		)
 	)
 
 	const upcomingRaces: ComputedRef<Race[]> = computed(() => {

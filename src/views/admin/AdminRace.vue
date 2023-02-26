@@ -14,7 +14,12 @@
 				<input type="text" v-model="currentRace.countryCode" placeholder=" " />
 				<span>Landcode</span>
 			</InputField>
-			<InputField type="date">
+			<DatePicker
+				v-model="currentRace.dates.qualification"
+				label="Kwalificatie"
+			/>
+			<DatePicker v-model="currentRace.dates.race" label="Race" />
+			<!--<InputField type="date">
 				<input type="date" v-model="qualificationDate" placeholder=" " />
 				<span>Qualificatie datum</span>
 			</InputField>
@@ -29,7 +34,7 @@
 			<InputField type="time">
 				<input type="time" v-model="raceTime" placeholder=" " />
 				<span>Race tijdstip</span>
-			</InputField>
+			</InputField>-->
 			<InputField type="checkbox">
 				<input
 					type="checkbox"
@@ -66,6 +71,7 @@ import StickyBlock from "@/elements/StickyBlock.vue"
 import InputField from "@/elements/InputField.vue"
 import { RaceDates } from "@/models/race.model"
 import ErrorMessage from "../../elements/ErrorMessage.vue"
+import DatePicker from "@/elements/DatePicker.vue"
 
 const raceStore = useRaces()
 const { currentRace } = storeToRefs(raceStore)

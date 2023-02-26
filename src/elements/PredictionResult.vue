@@ -1,6 +1,6 @@
 <template>
 	<div class="prediction-result">
-		<div class="label">{{ props.label }}</div>
+		<div class="label"><component :is="getLabelComponent(props.label)" /></div>
 		<div class="team-color" :style="{ 'background-color': teamColor }"></div>
 		<span class="result">{{ driverResult ? driverResult.name : "---" }}</span>
 		<span class="prediction">{{
@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+import { getLabelComponent } from "@/composables/getters"
 import { useDrivers } from "@/store/drivers"
 import { useResults } from "@/store/results"
 import { useTeams } from "@/store/teams"

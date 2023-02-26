@@ -27,6 +27,8 @@ import {
 } from "firebase/auth"
 import { convertToSlug } from "@/composables/getters"
 import { computed, ref, Ref } from "vue"
+import { Driver } from "@/models/driver.model"
+import { Team } from "@/models/team.model"
 
 const db = useFirestore()
 const db_col = collection(db, "users")
@@ -39,7 +41,7 @@ export const useUsers = defineStore("users", () => {
 			? doc(db_col, useCurrentUser().value?.uid)
 			: null
 	)
-	const { data: user } = useDocument<User>(userDoc)
+	const { data: user, promise: userLoading } = useDocument<User>(userDoc)
 
 	// Poule user
 	const pouleUserSlug: Ref<string> = ref("")
@@ -118,6 +120,21 @@ export const useUsers = defineStore("users", () => {
 		}
 	}
 
+	const updateUserWithSeasonPrediction = (
+		driverId: Driver["id"],
+		teamId: Team["id"]
+	) => {
+		try {
+			updateDoc(doc(db_col, user.value?.id), {
+				driverChampion: driverId,
+				constructorsChampion: teamId
+			})
+		} catch (error) {
+			console.log(error)
+			throw error
+		}
+	}
+
 	const removeUser = async () => {
 		const auth = getAuth()
 		if (!auth.currentUser) return console.warn("no user to delete")
@@ -148,6 +165,7 @@ export const useUsers = defineStore("users", () => {
 
 	return {
 		user,
+		userLoading,
 		pouleUser,
 		pouleUserSlug,
 		loginUser,
@@ -156,6 +174,7 @@ export const useUsers = defineStore("users", () => {
 		updateUser,
 		removeUser,
 		updateUserScore,
-		getUserById
+		getUserById,
+		updateUserWithSeasonPrediction
 	}
 })

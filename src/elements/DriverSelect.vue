@@ -9,6 +9,7 @@
 			:reduce="(driver: Driver) => driver.id"
 			:components="{ Deselect: IconTimes, OpenIndicator: IconChevronDown }"
 			:placeholder="placeholder"
+			:disabled="props.disabled"
 		>
 			<template #selected-option="{ label, color }">
 				<div class="team-indicator" :style="{ backgroundColor: color }"></div>
@@ -62,6 +63,11 @@ const props = defineProps({
 	label: {
 		required: true,
 		type: String
+	},
+	disabled: {
+		required: false,
+		type: Boolean,
+		default: false
 	},
 	modelValue: String
 })
@@ -206,6 +212,21 @@ const options = computed(() =>
 
 	&__clear {
 		margin-right: 12px;
+	}
+}
+
+.vs--disabled {
+	.vs {
+		&__dropdown-toggle,
+		&__search,
+		&__selected {
+			background: none;
+			cursor: default;
+		}
+
+		&__actions {
+			display: none;
+		}
 	}
 }
 
