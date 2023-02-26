@@ -12,8 +12,10 @@
 
 			<VueButton
 				v-if="
-					!predictionStore.currentPrediction.qualificationScore &&
-					!predictionStore.currentPrediction.raceScore
+					!(
+						predictionStore.currentPrediction.qualificationScore &&
+						predictionStore.currentPrediction.raceScore
+					)
 				"
 				:type="isSubmitting ? 'loading' : 'primary'"
 				>Voorspel</VueButton

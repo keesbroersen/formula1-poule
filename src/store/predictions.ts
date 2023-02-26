@@ -102,7 +102,7 @@ export const usePredictions = defineStore("predictions", () => {
 	const updatePredictionScore = async (
 		predictionId: string,
 		qualificationScore: number,
-		raceScore: number
+		raceScore: number | null
 	) => {
 		return updateDoc(doc(db_col, predictionId), {
 			qualificationScore,

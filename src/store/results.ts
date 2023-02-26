@@ -75,7 +75,8 @@ export const useResults = defineStore("results", () => {
 			saveScoreToDriversAndteams()
 			saveScoreToUsers()
 			if (currentResult.value.id) return updateResult()
-			const payload = { ...currentResult.value }
+			const payload = JSON.parse(JSON.stringify({ ...currentResult.value }))
+			delete payload.id
 			await addDoc(db_col, payload)
 			router.push({ path: "/" })
 		} catch (error) {
@@ -204,12 +205,15 @@ export const useResults = defineStore("results", () => {
 		return score
 	}
 
-	const calculateRaceResult = (prediction: Prediction): number => {
+	const calculateRaceResult = (prediction: Prediction): number | null => {
 		let score = 0
 		let index = 0
 
 		const raceResult = currentResult.value.race
+		console.log({ length: Object.keys(raceResult).length })
+		if (Object.keys(raceResult).length < 11) return null
 		for (const [key, value] of Object.entries(raceResult)) {
+			if (!value) return 0
 			if (prediction.race[key as keyof RacePrediction] === value) {
 				// Direct hit
 				if (key === "driver_of_the_day" || key === "fastest_lap") {
@@ -262,8 +266,11 @@ export const useResults = defineStore("results", () => {
 			// Calculate qualification score
 			const qualificationScore = calculateQualificationResult(prediction)
 			const raceScore = calculateRaceResult(prediction)
+			console.log({ qualificationScore, raceScore })
 			score += qualificationScore
-			score += raceScore
+			if (raceScore) {
+				score += raceScore
+			}
 
 			predictionStore.updatePredictionScore(
 				doc.id,
