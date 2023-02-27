@@ -210,11 +210,13 @@ export const useResults = defineStore("results", () => {
 		let index = 0
 
 		const raceResult = currentResult.value.race
-		console.log({ length: Object.keys(raceResult).length })
-		if (Object.keys(raceResult).length < 11) return null
+		if (Object.keys(raceResult).length < 13) return null
+
 		for (const [key, value] of Object.entries(raceResult)) {
-			if (!value) return 0
-			if (prediction.race[key as keyof RacePrediction] === value) {
+			const predictionValue = prediction.race[key as keyof RacePrediction]
+			if (!value || !predictionValue) continue
+
+			if (predictionValue === value) {
 				// Direct hit
 				if (key === "driver_of_the_day" || key === "fastest_lap") {
 					// These get one point
@@ -223,17 +225,18 @@ export const useResults = defineStore("results", () => {
 					// These get three points
 					score += 3
 				}
-			} else if (
-				(key.includes("pos") &&
-					prediction.race[key as keyof RacePrediction] ===
-						raceResult[`pos${index - 1}` as keyof RacePrediction]) ||
-				(key.includes("pos") &&
-					prediction.race[key as keyof RacePrediction] ===
-						raceResult[`pos${index + 1}` as keyof RacePrediction])
-			) {
-				// Indirect hit (one position of)
-				// One point
-				score++
+			} else if (key.includes("pos")) {
+				const keyNumber = parseInt(key.replace("pos", ""))
+				if (
+					predictionValue ===
+						raceResult[`pos${keyNumber - 1}` as keyof RacePrediction] ||
+					predictionValue ===
+						raceResult[`pos${keyNumber + 1}` as keyof RacePrediction]
+				) {
+					// Indirect hit (one position of)
+					// One point
+					score++
+				}
 			}
 
 			index++

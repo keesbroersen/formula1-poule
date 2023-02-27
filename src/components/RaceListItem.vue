@@ -24,9 +24,13 @@
 				:check="true"
 				content="Q"
 			/>
-			<IconCheck v-else :check="false" content="Q" />
+			<IconCheck
+				v-else-if="!thisPrediction?.qualificationScore"
+				:check="false"
+				content="Q"
+			/>
 			<IconCheck v-if="raceFilled && !totalScore" :check="true" content="R" />
-			<IconCheck v-else :check="false" content="R" />
+			<IconCheck v-else-if="!totalScore" :check="false" content="R" />
 			<p class="next-session" v-html="nextSession"></p>
 		</div>
 	</router-link>
