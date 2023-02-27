@@ -20,7 +20,7 @@ import { useDrivers } from "@/store/drivers"
 import { useResults } from "@/store/results"
 import { useTeams } from "@/store/teams"
 import { storeToRefs } from "pinia"
-import { computed, ref } from "vue"
+import { computed } from "vue"
 const driverStore = useDrivers()
 const resultsStore = useResults()
 const teamsStore = useTeams()

@@ -37,10 +37,6 @@ const selectedDateTime: Ref<string> = ref(
 )
 
 const emitChange = () => {
-	console.log("emitChange", {
-		selectedDateTime: selectedDateTime.value,
-		Timestamp: Timestamp.fromDate(new Date(selectedDateTime.value))
-	})
 	if (!selectedDateTime.value) return
 	emit(
 		"update:modelValue",
@@ -51,10 +47,6 @@ const emitChange = () => {
 watch(
 	() => props.modelValue,
 	(newValue) => {
-		console.log("watch", {
-			newValue,
-			selectedDateTime: moment(newValue.toDate()).format("YYYY-MM-DDTHH:mm")
-		})
 		selectedDateTime.value = moment(newValue.toDate()).format(
 			"YYYY-MM-DDTHH:mm"
 		)

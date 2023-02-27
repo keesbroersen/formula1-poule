@@ -1,5 +1,7 @@
 <template>
-	<ResultList v-if="currentPrediction.qualificationScore">
+	<ResultList
+		v-if="currentPrediction.qualificationScore || qualificationHasStarted"
+	>
 		<PredictionResult
 			label="1"
 			type="qualification"
@@ -38,6 +40,9 @@
 			type="qualification"
 			v-model="currentPrediction.qualification.pos3"
 		/>
+		<div class="list__footer">
+			<VueButton type="primary">Voorspel kwalificatie</VueButton>
+		</div>
 	</div>
 </template>
 
@@ -47,7 +52,20 @@ import { storeToRefs } from "pinia"
 import DriverSelect from "@/elements/DriverSelect.vue"
 import PredictionResult from "@/elements/PredictionResult.vue"
 import ResultList from "@/components/ResultList.vue"
+import { computed, onMounted, ref } from "vue"
+import { useRaces } from "@/store/races"
+import VueButton from "@/elements/VueButton.vue"
 
 const predictionStore = usePredictions()
 const { currentPrediction } = storeToRefs(predictionStore)
+
+const raceStore = useRaces()
+const date = ref(new Date())
+const qualificationHasStarted = computed(
+	() => raceStore.currentRace.dates.qualification.toDate() < date.value
+)
+
+onMounted(() => {
+	setInterval(() => (date.value = new Date()), 1000)
+})
 </script>

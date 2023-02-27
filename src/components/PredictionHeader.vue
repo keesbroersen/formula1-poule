@@ -4,7 +4,10 @@
 		<div class="content container">
 			<h1 class="title">{{ currentRace.country }}</h1>
 			<p class="dates">
-				<small>Qualification</small> {{ qualificationDate }}<br />
+				<small>{{
+					currentRace.isSprintRace ? "Sprintrace" : "Kwalificatie"
+				}}</small>
+				{{ qualificationDate }}<br />
 				<small>Race</small> {{ raceDate }}
 			</p>
 			<IconPoints class="points" :points="points" />

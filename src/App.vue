@@ -222,7 +222,13 @@ input[type="color"]::-webkit-color-swatch {
 .list {
 	display: flex;
 	flex-direction: column;
+	flex: 100%;
 	border-top: 1px solid var(--background-opacity);
+
+	&__footer {
+		margin-top: auto;
+		padding: 12px;
+	}
 }
 
 .list-item {
