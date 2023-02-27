@@ -20,7 +20,7 @@
 			</a>
 		</div>
 		<div v-else class="sidebar-navigation__content list">
-			<router-link class="list-item" to="/register">Register</router-link> |
+			<router-link class="list-item" to="/register">Register</router-link>
 			<router-link class="list-item" to="/login">Login</router-link>
 		</div>
 	</nav>
@@ -32,7 +32,6 @@ import { useGeneral } from "@/store/general"
 import { useUsers } from "@/store/users"
 import IconLogo from "@/assets/IconLogo.vue"
 import IconTimes from "@/assets/IconTimes.vue"
-import { onMounted } from "vue"
 const generalStore = useGeneral()
 const usersStore = useUsers()
 const { navigationOpen } = storeToRefs(generalStore)

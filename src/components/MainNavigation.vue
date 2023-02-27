@@ -3,9 +3,7 @@
 		class="main-navigation container"
 		:class="{ 'navigation-is-open': navigationOpen }"
 	>
-		<router-link :to="{ name: 'user_predictions' }"
-			><IconLogo class="logo"
-		/></router-link>
+		<router-link :to="{ path: '/' }"><IconLogo class="logo" /></router-link>
 		<button
 			@click="navigationOpen = navigationOpen ? false : true"
 			class="button button--hamburger button--clean"

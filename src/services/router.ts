@@ -12,21 +12,29 @@ const router = createRouter({
 		{
 			path: "/",
 			name: "user_home",
-			component: () => import("../views/UserHome.vue"),
-			meta: {
-				requiresAuth: true
+			component: async () => {
+				const currentUser = await getCurrentUser()
+				if (currentUser) {
+					return import("../views/UserHome.vue")
+				}
+				return import("../views/LandingPage.vue")
 			},
 			children: [
 				{
 					path: "predictions",
-					alias: "/",
 					name: "user_predictions",
-					component: () => import("../views/UserPredictions.vue")
+					component: () => import("../views/UserPredictions.vue"),
+					meta: {
+						requiresAuth: true
+					}
 				},
 				{
 					path: "poule",
 					name: "user_poule",
-					component: () => import("../views/UserPoule.vue")
+					component: () => import("../views/UserPoule.vue"),
+					meta: {
+						requiresAuth: true
+					}
 				}
 			]
 		},
@@ -315,15 +323,19 @@ router.beforeEach(async (to) => {
 	const generalStore = useGeneral()
 	generalStore.navigationOpen = false
 
+	const currentUser = await getCurrentUser()
+
 	if (to.meta.requiresAuth) {
-		const currentUser = await getCurrentUser()
 		if (!currentUser) {
 			return {
-				path: "/login",
-				query: {
-					redirectTo: to.fullPath
-				}
+				name: "user_login"
 			}
+		}
+	}
+
+	if (to.name === "user_home" && currentUser) {
+		return {
+			name: "user_predictions"
 		}
 	}
 })

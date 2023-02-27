@@ -107,7 +107,7 @@ export const useUsers = defineStore("users", () => {
 		const auth = getAuth()
 		signOut(auth)
 
-		router.push("/login")
+		router.push("/")
 	}
 
 	const updateUser = (name: string) => {
