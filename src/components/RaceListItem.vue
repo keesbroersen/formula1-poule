@@ -9,7 +9,9 @@
 			<p class="title">
 				{{ race.country }}<small>{{ race.circuit }}</small>
 			</p>
-			<p class="date" v-if="!totalScore">{{ dateTimeFormatted }}</p>
+			<p class="date" v-if="!totalScore || $route.path.includes('admin')">
+				{{ dateTimeFormatted }}
+			</p>
 			<IconPoints v-else :points="totalScore" />
 		</div>
 
@@ -122,9 +124,13 @@ const nextSession = computed(() => {
 		return "Race <span>onderweg</span>"
 	}
 
-	return `${closestToNow === "qualification" ? "kwalificatie" : "race"} <span>${
-		dateUntilNow.value
-	}</span>`
+	const qualificationSessionType = race.value.isSprintRace
+		? "sprintrace"
+		: "kwalificatie"
+
+	return `${
+		closestToNow === "qualification" ? qualificationSessionType : "race"
+	} <span>${dateUntilNow.value}</span>`
 })
 </script>
 

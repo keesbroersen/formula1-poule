@@ -201,7 +201,6 @@ export const useResults = defineStore("results", () => {
 
 		// If user has all three correct, extra point is awarded
 		if (score === 3) score = 4
-
 		return score
 	}
 
@@ -218,7 +217,7 @@ export const useResults = defineStore("results", () => {
 
 			if (predictionValue === value) {
 				// Direct hit
-				if (key === "driver_of_the_day" || key === "fastest_lap") {
+				if (key === "driverOfTheDay" || key === "fastestLap") {
 					// These get one point
 					score++
 				} else {
@@ -269,7 +268,7 @@ export const useResults = defineStore("results", () => {
 			// Calculate qualification score
 			const qualificationScore = calculateQualificationResult(prediction)
 			const raceScore = calculateRaceResult(prediction)
-			console.log({ qualificationScore, raceScore })
+
 			score += qualificationScore
 			if (raceScore) {
 				score += raceScore

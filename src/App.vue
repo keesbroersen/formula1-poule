@@ -238,4 +238,8 @@ input[type="color"]::-webkit-color-swatch {
 	padding: 0 16px;
 	height: 50px;
 }
+
+h2 {
+	margin-bottom: 16px;
+}
 </style>

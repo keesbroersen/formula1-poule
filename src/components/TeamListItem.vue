@@ -25,6 +25,7 @@ const team = computed(() => {
 .team-list-item {
 	display: flex;
 	align-items: center;
+	gap: 12px;
 	color: white;
 	border-bottom: 1px solid var(--background-opacity);
 	padding: 0 16px;
@@ -32,9 +33,10 @@ const team = computed(() => {
 }
 
 .color {
-	margin: 0 16px 0 0;
-	height: 100%;
+	margin: 4px 0;
+	height: calc(100% - 8px);
 	width: 4px;
+	border-radius: 2px;
 }
 .country {
 	margin-left: auto;

@@ -1,12 +1,10 @@
 <template>
-	<div class="driver-list">
-		<div class="driver-list__content">
-			<DriverListItem
-				v-for="driver in store.drivers"
-				:key="driver.id"
-				:driver="driver"
-			/>
-		</div>
+	<div class="list">
+		<DriverListItem
+			v-for="driver in store.drivers"
+			:key="driver.id"
+			:driver="driver"
+		/>
 	</div>
 </template>
 
@@ -16,18 +14,3 @@ import DriverListItem from "./DriverListItem.vue"
 
 const store = useDrivers()
 </script>
-
-<style scoped lang="scss">
-.driver-list {
-	display: flex;
-	flex-direction: column;
-	border-top: 1px solid var(--background-opacity);
-	padding-bottom: 32px;
-	width: 100%;
-
-	&__content {
-		display: flex;
-		flex-direction: column;
-	}
-}
-</style>

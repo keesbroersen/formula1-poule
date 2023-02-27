@@ -8,7 +8,11 @@
 				v-for="(race, index) in raceStore.filteredRaces"
 				:key="race.id"
 				:race="race"
-				:is-highlighted="index === 0 && raceStore.filter === 'upcoming'"
+				:is-highlighted="
+					index === 0 &&
+					raceStore.filter === 'upcoming' &&
+					!$route.path.includes('admin')
+				"
 			/>
 		</div>
 	</div>
@@ -17,7 +21,6 @@
 <script setup lang="ts">
 import RaceListItem from "./RaceListItem.vue"
 import SelectButton from "@/elements/SelectButton.vue"
-import { ref } from "vue"
 import ListHeader from "./ListHeader.vue"
 import { useRaces } from "@/store/races"
 const raceStore = useRaces()

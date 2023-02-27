@@ -253,6 +253,15 @@ const router = createRouter({
 			}
 		},
 		{
+			path: "/admin/champion",
+			name: "admin_champion",
+			component: () => import("../views/admin/AdminChampion.vue"),
+			meta: {
+				requiresAuth: true,
+				requiresAdmin: true
+			}
+		},
+		{
 			path: "/races/:slug",
 			name: "prediction_page",
 			component: () => import("../views/PredictionPage.vue"),

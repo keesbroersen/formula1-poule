@@ -16,7 +16,7 @@
 				'positions-gained--positive': props.user.positionsGained > 0
 			}"
 		>
-			{{ props.user.positionsGained }}
+			{{ props.user.positionsGained !== 0 ? props.user.positionsGained : null }}
 		</p>
 		<p class="points-gained">
 			{{

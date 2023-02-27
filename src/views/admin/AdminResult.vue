@@ -1,14 +1,14 @@
 <template>
 	<div v-if="currentRace" class="page--regular">
 		<h2>{{ currentRace?.circuit }}</h2>
-		<div class="page-navigation">
+		<MultiPageNavigation>
 			<router-link :to="`/admin/results/${currentRace.slug}/qualification`"
 				>Kwalificatie</router-link
 			>
 			<router-link :to="`/admin/results/${currentRace.slug}/race`"
 				>Race</router-link
 			>
-		</div>
+		</MultiPageNavigation>
 		<form @submit.prevent="submit" class="form">
 			<div class="list">
 				<router-view />
@@ -21,11 +21,11 @@
 					<option value="lessThan2laps">tot 2 laps</option>
 				</select>
 
-				<StickyBlock>
+				<div class="list__footer">
 					<VueButton :type="isSubmitting ? 'loading' : 'primary'"
 						>Sla resultaat op</VueButton
 					>
-				</StickyBlock>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -35,9 +35,9 @@
 import { useRaces } from "@/store/races"
 import { useResults } from "@/store/results"
 import { storeToRefs } from "pinia"
-import StickyBlock from "@/elements/StickyBlock.vue"
 import VueButton from "@/elements/VueButton.vue"
 import { ref } from "vue"
+import MultiPageNavigation from "@/components/MultiPageNavigation.vue"
 
 const raceStore = useRaces()
 const resultStore = useResults()
@@ -49,10 +49,19 @@ const submit = async () => {
 }
 </script>
 
-<style lang="scss">
-.page-navigation {
-	display: flex;
-	gap: 16px;
-	margin: 16px 0;
+<style lang="scss" scoped>
+h2 {
+	margin-left: 16px;
+}
+
+select {
+	margin: 16px 12px 0;
+	padding: 0 12px;
+	height: 42px;
+	width: calc(100% - 24px);
+	border-radius: 5px;
+	background: none;
+	border: 1px solid var(--background-opacity);
+	color: #fff;
 }
 </style>

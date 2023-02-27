@@ -4,9 +4,10 @@
 		:to="`drivers/${driver.slug}`"
 	>
 		<span class="color" :style="`background-color: ${team?.color}`"></span>
-		{{ driver.name }}
-		<small style="margin-left: 12px">{{ getPoints(driver.points) }}</small>
-		<small class="country">{{ driver.country }}</small> {{ team?.name }}
+		<span class="driver">{{ driver.name }}</span>
+		<small class="points">{{ getPoints(driver.points) }} pt</small>
+		<small class="country">{{ driver.country }}</small>
+		<span class="team">{{ team?.name }}</span>
 	</router-link>
 </template>
 
@@ -37,20 +38,30 @@ const team = computed(() => {
 .driver-list-item {
 	display: flex;
 	align-items: center;
+	gap: 12px;
 	color: white;
 	border-bottom: 1px solid var(--background-opacity);
 	padding: 0 16px;
 	height: 50px;
 }
 
+.driver,
+.points,
+.country,
+.team {
+	flex: 1;
+}
+
+.driver {
+	color: #fff;
+}
 .color {
-	margin: 0 16px 0 0;
-	height: 100%;
+	margin: 4px 0;
+	height: calc(100% - 8px);
 	width: 4px;
+	border-radius: 2px;
 }
 .country {
-	margin-left: auto;
-	width: 50%;
 	color: var(--general-opacity);
 }
 </style>
