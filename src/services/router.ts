@@ -5,38 +5,33 @@ import { useRaces } from "@/store/races"
 import { useDrivers } from "@/store/drivers"
 import { useTeams } from "@/store/teams"
 import { useUsers } from "@/store/users"
+import { computed } from "vue"
 
 const router = createRouter({
 	history: createWebHistory(),
 	routes: [
 		{
 			path: "/",
-			name: "user_home",
+			name: "home",
 			component: async () => {
-				const currentUser = await getCurrentUser()
-				if (currentUser) {
-					return import("../views/UserHome.vue")
-				}
 				return import("../views/LandingPage.vue")
-			},
-			children: [
-				{
-					path: "predictions",
-					name: "user_predictions",
-					component: () => import("../views/UserPredictions.vue"),
-					meta: {
-						requiresAuth: true
-					}
-				},
-				{
-					path: "poule",
-					name: "user_poule",
-					component: () => import("../views/UserPoule.vue"),
-					meta: {
-						requiresAuth: true
-					}
-				}
-			]
+			}
+		},
+		{
+			path: "/predictions",
+			name: "user_predictions",
+			component: () => import("../views/UserPredictions.vue"),
+			meta: {
+				requiresAuth: true
+			}
+		},
+		{
+			path: "/poule",
+			name: "user_poule",
+			component: () => import("../views/UserPoule.vue"),
+			meta: {
+				requiresAuth: true
+			}
 		},
 		{
 			path: "/poule/:slug",
@@ -333,7 +328,7 @@ router.beforeEach(async (to) => {
 		}
 	}
 
-	if (to.name === "user_home" && currentUser) {
+	if (to.name === "home" && currentUser) {
 		return {
 			name: "user_predictions"
 		}

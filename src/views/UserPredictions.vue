@@ -1,15 +1,18 @@
 <template>
-	<component
-		v-for="(component, index) in components"
-		:is="component.component"
-		v-bind="component.props"
-		:key="index"
-	/>
+	<UserHome>
+		<component
+			v-for="(component, index) in components"
+			:is="component.component"
+			v-bind="component.props"
+			:key="index"
+		/>
+	</UserHome>
 </template>
 
 <script setup lang="ts">
 import { useRaces } from "@/store/races"
 import { computed } from "vue"
+import UserHome from "@/views/UserHome.vue"
 import RaceList from "@/components/RaceList.vue"
 import SeasonPrediction from "@/components/SeasonPrediction.vue"
 

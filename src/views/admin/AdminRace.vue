@@ -19,22 +19,6 @@
 				label="Kwalificatie"
 			/>
 			<DatePicker v-model="currentRace.dates.race" label="Race" />
-			<!--<InputField type="date">
-				<input type="date" v-model="qualificationDate" placeholder=" " />
-				<span>Qualificatie datum</span>
-			</InputField>
-			<InputField type="time">
-				<input type="time" v-model="qualificationTime" placeholder=" " />
-				<span>Qualificatie tijdstip</span>
-			</InputField>
-			<InputField type="date">
-				<input type="date" v-model="raceDate" placeholder=" " />
-				<span>Race datum</span>
-			</InputField>
-			<InputField type="time">
-				<input type="time" v-model="raceTime" placeholder=" " />
-				<span>Race tijdstip</span>
-			</InputField>-->
 			<InputField type="checkbox">
 				<input
 					type="checkbox"
@@ -65,8 +49,7 @@
 import { storeToRefs } from "pinia"
 import { useRaces } from "@/store/races"
 import VueButton from "@/elements/VueButton.vue"
-import { computed, ref } from "vue"
-import { Timestamp } from "@firebase/firestore"
+import { ref } from "vue"
 import StickyBlock from "@/elements/StickyBlock.vue"
 import InputField from "@/elements/InputField.vue"
 import { RaceDates } from "@/models/race.model"
@@ -79,86 +62,7 @@ const isSubmitting = ref(false)
 const isRemoving = ref(false)
 const error = ref()
 
-const padTo2Digits = (num: Number) => {
-	return num.toString().padStart(2, "0")
-}
-
-const formatDate = (date = new Date()) => {
-	return [
-		date.getFullYear(),
-		padTo2Digits(date.getMonth() + 1),
-		padTo2Digits(date.getDate())
-	].join("-")
-}
-
-const formatTime = (date = new Date()) => {
-	return [padTo2Digits(date.getHours()), padTo2Digits(date.getMinutes())].join(
-		":"
-	)
-}
-
 if (!currentRace.value.dates) currentRace.value.dates = {} as RaceDates
-
-const qualificationTime = computed({
-	get: () => {
-		const date = currentRace?.value.dates?.qualification?.toDate()
-		if (date instanceof Date && isFinite(date.getTime())) {
-			return formatTime(
-				currentRace?.value.dates?.qualification?.toDate() as Date
-			)
-		}
-		return new Date()
-	},
-	set: (value) => {
-		const date = new Date(`${qualificationDate.value}T${value}:00`)
-		currentRace.value.dates.qualification = Timestamp.fromDate(date)
-	}
-})
-
-const qualificationDate = computed({
-	get: () => {
-		const date = currentRace?.value.dates?.qualification?.toDate()
-		if (date instanceof Date && isFinite(date.getTime())) {
-			return formatDate(
-				currentRace?.value.dates?.qualification?.toDate() as Date
-			)
-		}
-		return new Date()
-	},
-	set: (value) => {
-		console.log(`${value}T${qualificationTime.value}:00`)
-		const date = new Date(`${value}T${qualificationTime.value}:00`)
-		currentRace.value.dates.qualification = Timestamp.fromDate(date)
-	}
-})
-
-const raceTime = computed({
-	get: () => {
-		const date = currentRace?.value.dates?.race?.toDate()
-		if (date instanceof Date && isFinite(date.getTime())) {
-			return formatTime(currentRace?.value.dates?.race?.toDate() as Date)
-		}
-		return new Date()
-	},
-	set: (value) => {
-		const date = new Date(`${raceDate.value}T${value}:00`)
-		currentRace.value.dates.race = Timestamp.fromDate(date)
-	}
-})
-
-const raceDate = computed({
-	get: () => {
-		const date = currentRace?.value.dates?.race?.toDate()
-		if (date instanceof Date && isFinite(date.getTime())) {
-			return formatDate(currentRace?.value.dates?.race?.toDate() as Date)
-		}
-		return new Date()
-	},
-	set: (value) => {
-		const date = new Date(`${value}T${raceTime.value}:00`)
-		currentRace.value.dates.race = Timestamp.fromDate(date)
-	}
-})
 
 const submit = async () => {
 	isSubmitting.value = true

@@ -38,7 +38,10 @@
 			<router-link
 				:to="{ name: 'user_register' }"
 				class="button button--primary"
-				>Doe mee!</router-link
+				>Registreer</router-link
+			>
+			<router-link :to="{ name: 'user_login' }" class="button"
+				>Inloggen</router-link
 			>
 		</div>
 	</div>
@@ -58,17 +61,18 @@
 }
 
 h3 {
-	margin: 32px 0 8px;
+	margin: 32px 8px 8px;
 }
 
 p {
 	margin-bottom: 16px;
+	padding: 0 8px;
 	line-height: 130%;
 	color: rgba(255, 255, 255, 0.8);
 }
 
 .button {
-	margin: 32px 0 0;
+	margin: 8px 0 0;
 }
 
 .header-image {

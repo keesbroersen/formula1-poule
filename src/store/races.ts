@@ -13,7 +13,7 @@ import { Race } from "@/models/race.model"
 import moment from "moment"
 import router from "@/services/router"
 import { computed, ComputedRef, Ref, ref, watch } from "vue"
-import { useCollection, firestoreDefaultConverter } from "vuefire"
+import { useCollection } from "vuefire"
 import { usePredictions } from "./predictions"
 import { useResults } from "./results"
 

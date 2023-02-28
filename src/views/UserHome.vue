@@ -6,7 +6,7 @@
 			>
 			<router-link :to="{ name: 'user_poule' }">Poule</router-link>
 		</MultiPageNavigation>
-		<router-view />
+		<slot />
 	</div>
 </template>
 
