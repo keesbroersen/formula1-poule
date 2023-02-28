@@ -1,36 +1,38 @@
 <template>
 	<div>
 		<div class="header-image">
-			<img src="@/assets/header.png" />
+			<img src="@/assets/headerv2.png" />
 		</div>
 
-		<div class="content container">
+		<div class="page-content container">
 			<p>
-				Welcome to the ultimate Formula 1 poule app! Are you a die-hard Formula
-				1 fan who loves predicting race outcomes? If so, this app is perfect for
-				you. Our app allows you to predict the top 3 qualifiers, top 10 racers,
-				driver of the day, fastest lap, and even the season winners.
+				Welkom bij de ultieme Formule 1 poule-app! Ben jij een die-hard Formule
+				1-fan die ervan houdt om race-uitslagen te voorspellen? Dan is deze app
+				perfect voor jou.
+			</p>
+
+			<h3>Hoe werkt het?</h3>
+			<p>
+				Zo werkt het: Voor de top 3 kwalificatie krijg je 1 punt voor elke
+				juiste voorspelling en een extra bonuspunt als je ze alle drie correct
+				hebt. Voor de top 10 racevoorspellingen krijg je 3 punten voor een
+				correct voorspelde eindpositie, 1 punt als je er één positie naast zat
+				en 1 punt voor een correct voorspelde snelste ronde of coureur van de
+				dag.
+			</p>
+
+			<img src="@/assets/poule.png" />
+
+			<p>
+				Maar dat is niet alles. Je kunt ook de seizoenswinnaars voorspellen! Aan
+				het einde van het seizoen krijg je 25 punten als je de winnende coureur
+				correct voorspelt en nog eens 25 punten als je de winnende constructeur
+				correct voorspelt.
 			</p>
 
 			<p>
-				Here's how it works: For the top 3 qualification, you get 1 point for
-				every correct prediction and 4 bonus points if you get all three
-				correct. For the top 10 race predictions, you get 3 points for a
-				correctly predicted final position, 1 point if you were one position
-				off, and 1 point for a correctly predicted fastest lap or driver of the
-				day.
-			</p>
-
-			<p>
-				But that's not all. You can also predict the season winners! At the end
-				of the season, you will receive 25 points if you correctly predict the
-				winning driver and another 25 points if you correctly predict the
-				winning constructor.
-			</p>
-
-			<p>
-				So what are you waiting for? Register to our Formula 1 poule today and
-				start predicting!
+				Dus waar wacht je op? Registreer je vandaag nog en begin met
+				voorspellen!
 			</p>
 
 			<router-link
@@ -43,20 +45,35 @@
 </template>
 
 <style lang="scss" scoped>
+.page-content {
+	margin: 0 auto;
+	padding-bottom: 16px;
+	max-width: 500px;
+
+	img {
+		margin: 16px 0;
+		width: 100%;
+		border-radius: 5px;
+	}
+}
+
+h3 {
+	margin: 32px 0 8px;
+}
+
 p {
 	margin-bottom: 16px;
-	max-width: 500px;
 	line-height: 130%;
+	color: rgba(255, 255, 255, 0.8);
 }
 
 .button {
-	margin-bottom: 16px;
-	max-width: 500px;
+	margin: 32px 0 0;
 }
 
 .header-image {
 	position: relative;
-	margin-bottom: 16px;
+	margin: 0 0 16px;
 
 	&:before {
 		content: "";
@@ -67,11 +84,15 @@ p {
 		width: 100%;
 		background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
 	}
-}
 
-img {
-	width: 100%;
-	aspect-ratio: 16 / 9;
-	object-fit: cover;
+	img {
+		width: 100%;
+		object-fit: cover;
+		aspect-ratio: 4 / 3;
+
+		@media screen and (min-width: 768px) {
+			aspect-ratio: 16 / 9;
+		}
+	}
 }
 </style>

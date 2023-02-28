@@ -84,10 +84,11 @@ export const useUsers = defineStore("users", () => {
 		})
 	}
 
-	const loginUser = (email: string, password: string) => {
+	const loginUser = async (email: string, password: string) => {
 		const auth = getAuth()
 		try {
-			signInWithEmailAndPassword(auth, email, password)
+			await signInWithEmailAndPassword(auth, email, password)
+			router.push({ name: "user_predictions" })
 		} catch (error: any) {
 			switch (error.code) {
 				case "auth/invalid-email":
@@ -102,10 +103,10 @@ export const useUsers = defineStore("users", () => {
 		}
 	}
 
-	const logoutUser = () => {
+	const logoutUser = async () => {
 		// Logout from Firebase
 		const auth = getAuth()
-		signOut(auth)
+		await signOut(auth)
 
 		router.push("/")
 	}

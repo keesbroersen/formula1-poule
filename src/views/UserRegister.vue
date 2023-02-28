@@ -22,6 +22,11 @@
 				<span>Wachtwoord</span>
 			</InputField>
 
+			<p>
+				Al een account?
+				<router-link :to="{ name: 'user_login' }">Log in</router-link>
+			</p>
+
 			<p v-if="errMsg">{{ errMsg }}</p>
 			<StickyBlock>
 				<VueButton :type="isRegistering ? 'loading' : 'primary'"
