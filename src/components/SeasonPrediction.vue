@@ -17,7 +17,9 @@
 				:disabled="props.seasonHasStarted"
 			/>
 		</div>
-		<VueButton v-if="!props.seasonHasStarted"
+		<VueButton
+			v-if="!props.seasonHasStarted"
+			:type="loading ? 'loading' : 'primary'"
 			>Voorspel seizoenswinnaars</VueButton
 		>
 	</form>
@@ -44,6 +46,7 @@ const props = defineProps({
 
 const driverPrediction = ref()
 const teamPrediction = ref()
+const loading = ref()
 
 onMounted(async () => {
 	await userStore.userLoading
@@ -52,10 +55,17 @@ onMounted(async () => {
 })
 
 const submit = async () => {
-	userStore.updateUserWithSeasonPrediction(
-		driverPrediction.value,
-		teamPrediction.value
-	)
+	loading.value = true
+	try {
+		await userStore.updateUserWithSeasonPrediction(
+			driverPrediction.value,
+			teamPrediction.value
+		)
+	} catch (error) {
+		// @todo: handle error
+	} finally {
+		loading.value = false
+	}
 }
 
 const timeUntilStartOfSeason = computed(() => {

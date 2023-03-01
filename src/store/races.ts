@@ -75,11 +75,11 @@ export const useRaces = defineStore("races", () => {
 	})
 
 	const addRace = async () => {
-		// await addDoc(db_col, { ...currentRace.value, slug: getSlug.value })
-		// 	.then(() => router.push({ path: "/admin/races" }))
-		// 	.catch((error) => {
-		// 		throw error
-		// 	})
+		await addDoc(db_col, { ...currentRace.value, slug: getSlug.value })
+			.then(() => router.push({ path: "/admin/races" }))
+			.catch((error) => {
+				throw error
+			})
 	}
 
 	const updateRace = async () => {

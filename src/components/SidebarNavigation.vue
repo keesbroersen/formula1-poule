@@ -11,7 +11,7 @@
 		</div>
 		<div v-if="user" class="sidebar-navigation__content list">
 			<router-link class="list-item" to="/account">{{ user.name }}</router-link>
-			<router-link class="list-item" to="/standings">Kampioenschap</router-link>
+			<router-link class="list-item" to="/standings">Klassement</router-link>
 			<router-link class="list-item" to="/admin" v-if="user.role === 'admin'"
 				>Admin</router-link
 			>

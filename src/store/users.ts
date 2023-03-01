@@ -121,12 +121,12 @@ export const useUsers = defineStore("users", () => {
 		}
 	}
 
-	const updateUserWithSeasonPrediction = (
+	const updateUserWithSeasonPrediction = async (
 		driverId: Driver["id"],
 		teamId: Team["id"]
 	) => {
 		try {
-			updateDoc(doc(db_col, user.value?.id), {
+			await updateDoc(doc(db_col, user.value?.id), {
 				driverChampion: driverId,
 				constructorsChampion: teamId
 			})

@@ -21,7 +21,7 @@
 		<p class="points-gained">
 			{{
 				`${props.user.lastPointsGained > 0 ? "+" : ""}  ${
-					props.user.lastPointsGained
+					props.user.lastPointsGained || 0
 				}`
 			}}
 		</p>
