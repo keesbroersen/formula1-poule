@@ -1,24 +1,31 @@
 <template>
 	<ResultList
-		v-if="currentPrediction.qualificationScore || qualificationHasStarted"
+		v-if="
+			currentPrediction.qualificationScore ||
+			qualificationHasStarted ||
+			isOtherUser
+		"
 	>
 		<PredictionResult
 			label="1"
 			type="qualification"
 			position="pos1"
 			:predicted="currentPrediction.qualification.pos1"
+			:show-prediction="isOtherUser && qualificationHasStarted"
 		/>
 		<PredictionResult
 			label="2"
 			type="qualification"
 			position="pos2"
 			:predicted="currentPrediction.qualification.pos2"
+			:show-prediction="isOtherUser && qualificationHasStarted"
 		/>
 		<PredictionResult
 			label="3"
 			type="qualification"
 			position="pos3"
 			:predicted="currentPrediction.qualification.pos3"
+			:show-prediction="isOtherUser && qualificationHasStarted"
 		/>
 	</ResultList>
 	<div v-else class="list">
@@ -55,7 +62,9 @@ import ResultList from "@/components/ResultList.vue"
 import { computed, onMounted, ref } from "vue"
 import { useRaces } from "@/store/races"
 import VueButton from "@/elements/VueButton.vue"
+import { useRoute } from "vue-router"
 
+const route = useRoute()
 const predictionStore = usePredictions()
 const { currentPrediction } = storeToRefs(predictionStore)
 
@@ -64,6 +73,8 @@ const date = ref(new Date())
 const qualificationHasStarted = computed(
 	() => raceStore.currentRace.dates.qualification.toDate() < date.value
 )
+
+const isOtherUser = computed(() => route.path.includes("poule"))
 
 onMounted(() => {
 	setInterval(() => (date.value = new Date()), 1000)

@@ -158,6 +158,10 @@ export const useUsers = defineStore("users", () => {
 		return user
 	}
 
+	const getUserBySlug = (slug: string): User | undefined => {
+		return pouleUser.value.find((user) => user.slug === slug)
+	}
+
 	const updateUserScore = async (userId: string, score: Array<number>) => {
 		return updateDoc(doc(db_col, userId), {
 			score
@@ -187,6 +191,7 @@ export const useUsers = defineStore("users", () => {
 		updateUserScore,
 		getUserById,
 		updateUserWithSeasonPrediction,
-		clearAllUserScores
+		clearAllUserScores,
+		getUserBySlug
 	}
 })

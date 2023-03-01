@@ -2,7 +2,10 @@
 	<div class="prediction-header">
 		<img :src="imageSrc" :alt="currentRace.country" class="image" />
 		<div class="content container">
-			<h1 class="title">{{ currentRace.country }}</h1>
+			<h1 class="title">
+				{{ currentRace.country }}
+				<small v-if="currentUser">{{ currentUser.name }}</small>
+			</h1>
 			<p class="dates">
 				<small>{{
 					currentRace.isSprintRace ? "Sprintrace" : "Kwalificatie"
@@ -18,14 +21,20 @@
 <script setup>
 import { usePredictions } from "@/store/predictions"
 import { useRaces } from "@/store/races"
+import { useUsers } from "@/store/users"
 import { storeToRefs } from "pinia"
 import { computed } from "vue"
 import moment from "moment"
 import IconPoints from "@/elements/IconPoints.vue"
+import { useRoute } from "vue-router"
+
+const route = useRoute()
 const predictionStore = usePredictions()
 const racesStore = useRaces()
+const usersStore = useUsers()
 const { currentPrediction } = storeToRefs(predictionStore)
 const { currentRace } = storeToRefs(racesStore)
+const { pouleUser } = storeToRefs(usersStore)
 moment.locale("nl")
 
 const points = computed(
@@ -64,6 +73,8 @@ const raceDate = computed(() => {
 
 	return race
 })
+
+const currentUser = computed(() => usersStore.getUserBySlug(route.params.slug))
 </script>
 
 <style lang="scss" scoped>
@@ -120,6 +131,11 @@ const raceDate = computed(() => {
 	font-weight: 900;
 	text-transform: uppercase;
 	line-height: 1;
+
+	small {
+		color: var(--general-opacity);
+		font-size: 12px;
+	}
 }
 
 .points {

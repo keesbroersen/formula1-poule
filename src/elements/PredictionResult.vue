@@ -4,7 +4,7 @@
 		<div class="team-color" :style="{ 'background-color': teamColor }"></div>
 		<span class="result">{{ driverResult ? driverResult.name : "---" }}</span>
 		<span class="prediction">{{
-			driverPredicted ? driverPredicted.name : "---"
+			driverPredicted && showPrediction ? driverPredicted.name : "---"
 		}}</span>
 		<div v-if="predicted" class="points" :class="{ 'points-none': points < 1 }">
 			{{ points }}
@@ -43,6 +43,11 @@ const props = defineProps({
 	type: {
 		required: true,
 		type: String
+	},
+	showPrediction: {
+		required: false,
+		type: Boolean,
+		default: true
 	}
 })
 
