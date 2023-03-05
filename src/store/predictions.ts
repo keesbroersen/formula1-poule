@@ -16,6 +16,7 @@ import {
 import { useRaces } from "./races"
 import router from "@/services/router"
 import { useDrivers } from "./drivers"
+import { useUsers } from "./users"
 import { ref, computed, watch, Ref } from "vue"
 import { getPoints } from "@/composables/getters"
 
@@ -26,8 +27,11 @@ export const usePredictions = defineStore("predictions", () => {
 	// Consts
 	const user = useCurrentUser()
 	const raceStore = useRaces()
-	const userUid = user.value?.uid || ""
-	const q = query(db_col, where("userId", "==", userUid))
+	const usersStore = useUsers()
+	const userUid = computed(
+		() => usersStore.currentPouleUser?.id || user.value?.uid
+	)
+	const q = computed(() => query(db_col, where("userId", "==", userUid.value)))
 
 	// State
 	const { data: predictions, promise } = useCollection<Prediction>(q)
@@ -115,6 +119,7 @@ export const usePredictions = defineStore("predictions", () => {
 	}
 
 	const setCurrentPrediction = async () => {
+		console.log("setCurrentPrediction")
 		await promise.value
 		const getPredictionByRaceId = predictions.value.find(
 			(prediction: Prediction) => prediction.raceId === raceStore.currentRace.id

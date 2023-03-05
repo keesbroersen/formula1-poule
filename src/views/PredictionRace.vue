@@ -7,70 +7,70 @@
 			type="race"
 			position="pos1"
 			:predicted="currentPrediction.race.pos1"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="2"
 			type="race"
 			position="pos2"
 			:predicted="currentPrediction.race.pos2"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="3"
 			type="race"
 			position="pos3"
 			:predicted="currentPrediction.race.pos3"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="4"
 			type="race"
 			position="pos4"
 			:predicted="currentPrediction.race.pos4"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="5"
 			type="race"
 			position="pos5"
 			:predicted="currentPrediction.race.pos5"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="6"
 			type="race"
 			position="pos6"
 			:predicted="currentPrediction.race.pos6"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="7"
 			type="race"
 			position="pos7"
 			:predicted="currentPrediction.race.pos7"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="8"
 			type="race"
 			position="pos8"
 			:predicted="currentPrediction.race.pos8"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="9"
 			type="race"
 			position="pos9"
 			:predicted="currentPrediction.race.pos9"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="10"
 			type="race"
 			position="pos10"
 			:predicted="currentPrediction.race.pos10"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult label="11" type="race" position="pos11" />
 		<PredictionResult
@@ -78,14 +78,14 @@
 			type="race"
 			position="driverOfTheDay"
 			:predicted="currentPrediction.race.driverOfTheDay"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 		<PredictionResult
 			label="fastestLap"
 			type="race"
 			position="fastestLap"
 			:predicted="currentPrediction.race.fastestLap"
-			:show-prediction="isOtherUser && raceHasStarted"
+			:show-prediction="raceHasStarted"
 		/>
 	</ResultList>
 	<div v-else class="list">

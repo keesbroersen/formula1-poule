@@ -1,8 +1,8 @@
 <template>
 	<div class="page--regular container">
-		<h2>
-			{{ pouleUser[0].name }}
-			<small>{{ getPoints(pouleUser[0].score) }} pt</small>
+		<h2 v-if="currentPouleUser">
+			{{ currentPouleUser.name }}
+			<small>{{ getPoints(currentPouleUser.score) }} pt</small>
 		</h2>
 		<RaceList />
 	</div>
@@ -13,5 +13,5 @@ import RaceList from "@/components/RaceList.vue"
 import { getPoints } from "@/composables/getters"
 import { useUsers } from "@/store/users"
 import { storeToRefs } from "pinia"
-const { pouleUser } = storeToRefs(useUsers())
+const { currentPouleUser } = storeToRefs(useUsers())
 </script>

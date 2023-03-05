@@ -2,7 +2,6 @@ import { defineStore } from "pinia"
 import {
 	getFirestore,
 	collection,
-	getDocs,
 	addDoc,
 	deleteDoc,
 	updateDoc,
@@ -14,8 +13,6 @@ import moment from "moment"
 import router from "@/services/router"
 import { computed, ComputedRef, Ref, ref, watch } from "vue"
 import { useCollection } from "vuefire"
-import { usePredictions } from "./predictions"
-import { useResults } from "./results"
 
 type Filter = "upcoming" | "completed" | "all"
 
@@ -109,20 +106,6 @@ export const useRaces = defineStore("races", () => {
 	const clearCurrentRace = () => {
 		currentRace.value = {} as Race
 	}
-
-	// Watchers
-	watch(
-		() => ({
-			...currentRace.value
-		}),
-		() => {
-			// On current race change, set current prediction
-			const predictionStore = usePredictions()
-			predictionStore.setCurrentPrediction()
-			const resultStore = useResults()
-			resultStore.setCurrentResult()
-		}
-	)
 
 	return {
 		addRace,

@@ -11,21 +11,21 @@
 			type="qualification"
 			position="pos1"
 			:predicted="currentPrediction.qualification.pos1"
-			:show-prediction="isOtherUser && qualificationHasStarted"
+			:show-prediction="qualificationHasStarted"
 		/>
 		<PredictionResult
 			label="2"
 			type="qualification"
 			position="pos2"
 			:predicted="currentPrediction.qualification.pos2"
-			:show-prediction="isOtherUser && qualificationHasStarted"
+			:show-prediction="qualificationHasStarted"
 		/>
 		<PredictionResult
 			label="3"
 			type="qualification"
 			position="pos3"
 			:predicted="currentPrediction.qualification.pos3"
-			:show-prediction="isOtherUser && qualificationHasStarted"
+			:show-prediction="qualificationHasStarted"
 		/>
 	</ResultList>
 	<div v-else class="list">

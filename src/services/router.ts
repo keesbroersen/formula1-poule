@@ -5,7 +5,8 @@ import { useRaces } from "@/store/races"
 import { useDrivers } from "@/store/drivers"
 import { useTeams } from "@/store/teams"
 import { useUsers } from "@/store/users"
-import { computed } from "vue"
+import { usePredictions } from "@/store/predictions"
+import { useResults } from "@/store/results"
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -48,7 +49,7 @@ const router = createRouter({
 		},
 		{
 			path: "/poule/:slug/:raceSlug",
-			name: "poule_userPrediction",
+			name: "poule_user_prediction",
 			component: () => import("../views/PredictionPage.vue"),
 			meta: {
 				requiresAuth: true
@@ -58,6 +59,10 @@ const router = createRouter({
 				usersStore.pouleUserSlug = to.params.slug as string
 				const raceStore = useRaces()
 				raceStore.setCurrentRace(to.params.raceSlug as string)
+				const predictionStore = usePredictions()
+				predictionStore.setCurrentPrediction()
+				const resultStore = useResults()
+				resultStore.setCurrentResult()
 			},
 			children: [
 				{
@@ -274,6 +279,10 @@ const router = createRouter({
 			beforeEnter(to) {
 				const raceStore = useRaces()
 				raceStore.setCurrentRace(to.params.slug as string)
+				const predictionStore = usePredictions()
+				predictionStore.setCurrentPrediction()
+				const resultStore = useResults()
+				resultStore.setCurrentResult()
 			},
 			children: [
 				{
@@ -319,6 +328,10 @@ router.beforeEach(async (to) => {
 	generalStore.navigationOpen = false
 
 	const currentUser = await getCurrentUser()
+
+	// Reset currentPouleUser
+	const usersStore = useUsers()
+	usersStore.pouleUserSlug = ""
 
 	if (to.meta.requiresAuth) {
 		if (!currentUser) {

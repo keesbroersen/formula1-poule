@@ -4,7 +4,9 @@
 		<div class="content container">
 			<h1 class="title">
 				{{ currentRace.country }}
-				<small v-if="currentUser">{{ currentUser.name }}</small>
+				<small v-if="currentPouleUser && $route.path.includes('poule')">{{
+					currentPouleUser.name
+				}}</small>
 			</h1>
 			<p class="dates">
 				<small>{{
@@ -34,7 +36,7 @@ const racesStore = useRaces()
 const usersStore = useUsers()
 const { currentPrediction } = storeToRefs(predictionStore)
 const { currentRace } = storeToRefs(racesStore)
-const { pouleUser } = storeToRefs(usersStore)
+const { currentPouleUser } = storeToRefs(usersStore)
 moment.locale("nl")
 
 const points = computed(
@@ -73,8 +75,6 @@ const raceDate = computed(() => {
 
 	return race
 })
-
-const currentUser = computed(() => usersStore.getUserBySlug(route.params.slug))
 </script>
 
 <style lang="scss" scoped>

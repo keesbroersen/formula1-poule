@@ -13,8 +13,9 @@ import {
 	useFirestore,
 	useCurrentUser,
 	useDocument,
+	updateCurrentUserProfile,
 	useCollection,
-	updateCurrentUserProfile
+	firestoreDefaultConverter
 } from "vuefire"
 import { User } from "@/models/user.model"
 import router from "@/services/router"
@@ -36,21 +37,28 @@ const db_col = collection(db, "users")
 export const useUsers = defineStore("users", () => {
 	// State
 	// Main user
+	const currentUserId = computed(() => useCurrentUser().value?.uid || null)
 	const userDoc = computed(() =>
-		useCurrentUser().value?.uid
-			? doc(db_col, useCurrentUser().value?.uid)
-			: null
+		currentUserId.value ? doc(db_col, currentUserId.value) : null
 	)
 	const { data: user, promise: userLoading } = useDocument<User>(userDoc)
 
 	// Poule user
 	const pouleUserSlug: Ref<string> = ref("")
-	const pouleUserQuery = computed(() =>
-		pouleUserSlug.value
-			? query(db_col, where("slug", "==", pouleUserSlug.value))
-			: null
-	)
+	const pouleUserQuery = computed(() => {
+		if (pouleUserSlug.value) {
+			return query(db_col, where("slug", "==", pouleUserSlug.value))
+		}
+		if (currentUserId.value) {
+			return query(db_col, where("__name__", "==", currentUserId.value))
+		}
+		return null
+	})
 	const { data: pouleUser } = useCollection<User>(pouleUserQuery)
+	const currentPouleUser = computed((): User => {
+		if (!pouleUser.value[0]) return new User()
+		return { ...pouleUser.value[0], id: pouleUser.value[0].id }
+	})
 
 	// Actions
 	const registerUser = async (
@@ -158,10 +166,6 @@ export const useUsers = defineStore("users", () => {
 		return user
 	}
 
-	const getUserBySlug = (slug: string): User | undefined => {
-		return pouleUser.value.find((user) => user.slug === slug)
-	}
-
 	const updateUserScore = async (userId: string, score: Array<number>) => {
 		return updateDoc(doc(db_col, userId), {
 			score
@@ -181,7 +185,7 @@ export const useUsers = defineStore("users", () => {
 	return {
 		user,
 		userLoading,
-		pouleUser,
+		currentPouleUser,
 		pouleUserSlug,
 		loginUser,
 		registerUser,
@@ -191,7 +195,6 @@ export const useUsers = defineStore("users", () => {
 		updateUserScore,
 		getUserById,
 		updateUserWithSeasonPrediction,
-		clearAllUserScores,
-		getUserBySlug
+		clearAllUserScores
 	}
 })
