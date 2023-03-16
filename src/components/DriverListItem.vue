@@ -5,7 +5,7 @@
 	>
 		<span class="color" :style="`background-color: ${team?.color}`"></span>
 		<span class="driver">{{ driver.name }}</span>
-		<small class="points">{{ getPoints(driver.points) }} pt</small>
+		<small class="points">{{ driver.pointsTotal }} pt</small>
 		<small class="country">{{ driver.country }}</small>
 		<span class="team">{{ team?.name }}</span>
 	</router-link>
@@ -15,7 +15,6 @@
 import { computed } from "vue"
 import { Driver } from "@/models/driver.model"
 import { useTeams } from "@/store/teams"
-import { getPoints } from "@/composables/getters"
 import moment from "moment"
 moment.locale("nl")
 

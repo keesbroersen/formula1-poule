@@ -1,26 +1,23 @@
 import { defineStore } from "pinia"
 import {
-	collection,
 	setDoc,
 	deleteDoc,
 	doc,
 	query,
 	where,
 	getDocs,
-	updateDoc
+	updateDoc,
+	collection
 } from "firebase/firestore"
 import {
-	useFirestore,
 	useCurrentUser,
 	useDocument,
 	updateCurrentUserProfile,
-	useCollection,
-	firestoreDefaultConverter
+	useCollection
 } from "vuefire"
 import { User } from "@/models/user.model"
 import router from "@/services/router"
 import {
-	getAuth,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signOut,
@@ -30,8 +27,8 @@ import { convertToSlug } from "@/composables/getters"
 import { computed, ref, Ref } from "vue"
 import { Driver } from "@/models/driver.model"
 import { Team } from "@/models/team.model"
+import { auth, db } from "@/services/firebase"
 
-const db = useFirestore()
 const db_col = collection(db, "users")
 
 export const useUsers = defineStore("users", () => {
@@ -66,7 +63,6 @@ export const useUsers = defineStore("users", () => {
 		email: string,
 		password: string
 	) => {
-		const auth = getAuth()
 		const userCredential = await createUserWithEmailAndPassword(
 			auth,
 			email,
@@ -93,7 +89,6 @@ export const useUsers = defineStore("users", () => {
 	}
 
 	const loginUser = async (email: string, password: string) => {
-		const auth = getAuth()
 		try {
 			await signInWithEmailAndPassword(auth, email, password)
 			router.push({ name: "user_predictions" })
@@ -113,7 +108,6 @@ export const useUsers = defineStore("users", () => {
 
 	const logoutUser = async () => {
 		// Logout from Firebase
-		const auth = getAuth()
 		await signOut(auth)
 
 		router.push("/")
@@ -145,7 +139,6 @@ export const useUsers = defineStore("users", () => {
 	}
 
 	const removeUser = async () => {
-		const auth = getAuth()
 		if (!auth.currentUser) return console.warn("no user to delete")
 
 		try {

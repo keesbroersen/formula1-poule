@@ -19,13 +19,9 @@
 			{{ props.user.positionsGained !== 0 ? props.user.positionsGained : null }}
 		</p>
 		<p class="points-gained">
-			{{
-				`${props.user.lastPointsGained > 0 ? "+" : ""}  ${
-					props.user.lastPointsGained || 0
-				}`
-			}}
+			{{ `${pointsGained > 0 ? "+" : ""}  ${pointsGained || 0}` }}
 		</p>
-		<p>{{ props.user.pointsTotal }}</p>
+		<p>{{ props.user.pointsTotal || 0 }}</p>
 	</router-link>
 </template>
 
@@ -33,11 +29,16 @@
 import { UserWithPoints } from "@/models/user.model"
 import { DriverWithPoints } from "@/models/driver.model"
 import { TeamWithPoints } from "@/models/team.model"
+import { computed } from "vue"
 
 const props = defineProps<{
 	user: UserWithPoints | DriverWithPoints | TeamWithPoints
 	index: number
 }>()
+
+const pointsGained = computed(
+	() => props.user.pointsTotal - props.user.previousPointsTotal
+)
 </script>
 
 <style lang="scss" scoped>

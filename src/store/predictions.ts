@@ -18,9 +18,8 @@ import router from "@/services/router"
 import { useDrivers } from "./drivers"
 import { useUsers } from "./users"
 import { ref, computed, watch, Ref } from "vue"
-import { getPoints } from "@/composables/getters"
+import { db } from "@/services/firebase"
 
-const db = useFirestore()
 const db_col = collection(db, "predictions")
 
 export const usePredictions = defineStore("predictions", () => {
@@ -41,7 +40,7 @@ export const usePredictions = defineStore("predictions", () => {
 	const getPredictionDrivers = computed(() => {
 		const driverStore = useDrivers()
 		const drivers = [...driverStore.drivers].sort(
-			(a, b) => getPoints(b.points) - getPoints(a.points)
+			(a, b) => b.pointsTotal - a.pointsTotal
 		)
 		return drivers.map((driver) => {
 			const pickedForDriverOfTheDay =
@@ -119,7 +118,7 @@ export const usePredictions = defineStore("predictions", () => {
 	}
 
 	const setCurrentPrediction = async () => {
-		console.log("setCurrentPrediction")
+		console.log("setCurrentPrediction", { raceId: raceStore.currentRace.id })
 		await promise.value
 		const getPredictionByRaceId = predictions.value.find(
 			(prediction: Prediction) => prediction.raceId === raceStore.currentRace.id

@@ -12,7 +12,6 @@
 <script setup lang="ts">
 import { useTeams } from "@/store/teams"
 import { computed } from "vue"
-import { getPoints } from "@/composables/getters"
 import { TeamWithPoints } from "@/models/team.model"
 import PouleListItem from "@/components/PouleListItem.vue"
 
@@ -22,8 +21,8 @@ const teams = computed(() => {
 	const teams = teamsStore.teams.map((team) => {
 		return {
 			...team,
-			pointsTotal: getPoints(team.points),
-			lastPointsGained: team.points[team.points.length - 1]
+			pointsTotal: team.pointsTotal,
+			lastPointsGained: team.previousPointsTotal
 		} as TeamWithPoints
 	})
 

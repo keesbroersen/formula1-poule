@@ -3,36 +3,33 @@
 		class="race container"
 		:class="{ 'race-highlighted': isHighlighted }"
 		:to="link"
+		v-if="points"
 	>
 		<CountryFlag :countryCode="race.countryCode" />
 		<div class="race__header">
 			<p class="title">
 				{{ race.country }}<small>{{ race.circuit }}</small>
 			</p>
-			<p class="date" v-if="!totalScore || $route.path.includes('admin')">
+			<p class="date" v-if="!points.total || $route.path.includes('admin')">
 				{{ dateTimeFormatted }}
 			</p>
-			<IconPoints v-else :points="totalScore" />
+			<IconPoints v-else :points="points.total" />
 		</div>
 
 		<div class="race__footer" v-if="isHighlighted">
-			<IconPoints v-if="totalScore" :points="totalScore" />
+			<IconPoints v-if="points.total" :points="points.total" />
 			<IconPoints
-				v-else-if="thisPrediction?.qualificationScore"
-				:points="thisPrediction?.qualificationScore"
+				v-else-if="points.qualification"
+				:points="points.qualification"
 			/>
 			<IconCheck
-				v-if="qualificationFilled && !thisPrediction?.qualificationScore"
+				v-if="qualificationFilled && !points.qualification"
 				:check="true"
 				content="Q"
 			/>
-			<IconCheck
-				v-else-if="!thisPrediction?.qualificationScore"
-				:check="false"
-				content="Q"
-			/>
-			<IconCheck v-if="raceFilled && !totalScore" :check="true" content="R" />
-			<IconCheck v-else-if="!totalScore" :check="false" content="R" />
+			<IconCheck v-else-if="!points.qualification" :check="false" content="Q" />
+			<IconCheck v-if="raceFilled && !points.race" :check="true" content="R" />
+			<IconCheck v-else-if="!points" :check="false" content="R" />
 			<p class="next-session" v-html="nextSession"></p>
 		</div>
 	</router-link>
@@ -41,12 +38,17 @@
 <script setup lang="ts">
 import { ref, computed } from "vue"
 import { Race, RaceDates } from "@/models/race.model"
-import { usePredictions } from "@/store/predictions"
 import CountryFlag from "@/elements/CountryFlag.vue"
 import moment from "moment"
 import { useRoute } from "vue-router"
 import IconPoints from "@/elements/IconPoints.vue"
 import IconCheck from "@/elements/IconCheck.vue"
+import { usePredictions } from "@/store/predictions"
+import { useUsers } from "@/store/users"
+import { storeToRefs } from "pinia"
+
+const usersStore = useUsers()
+const { currentPouleUser } = storeToRefs(usersStore)
 const route = useRoute()
 moment.locale("nl")
 
@@ -79,6 +81,12 @@ const dateTimeFormatted = computed(() => {
 	})
 })
 
+const points = computed(() => {
+	if (!race.value.id || !currentPouleUser.value?.points[race.value.id])
+		return { qualification: 0, race: null, total: 0 }
+	return currentPouleUser.value?.points[race.value.id]
+})
+
 const predictionStore = usePredictions()
 const thisPrediction = computed(() =>
 	predictionStore.predictions.find(
@@ -96,12 +104,6 @@ const raceFilled = computed(() => {
 	return Object.entries(thisPrediction.value.race).every((item) => item[1])
 })
 
-const totalScore = computed(() => {
-	if (!thisPrediction.value?.raceScore) return
-	const qualiScore = thisPrediction.value?.qualificationScore || 0
-	return qualiScore + thisPrediction.value?.raceScore
-})
-
 const dateUntilNow = computed(() => {
 	return moment(date.value).fromNow()
 })
@@ -116,11 +118,11 @@ const nextSession = computed(() => {
 		})
 		.shift()
 
-	if (totalScore.value) {
+	if (points.value.race) {
 		return "Race <span>beëindigd</span>"
 	}
 
-	if (!closestToNow && !totalScore.value) {
+	if (!closestToNow && !points.value.race) {
 		return "Race <span>onderweg</span>"
 	}
 

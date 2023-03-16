@@ -21,28 +21,21 @@
 </template>
 
 <script setup>
-import { usePredictions } from "@/store/predictions"
 import { useRaces } from "@/store/races"
 import { useUsers } from "@/store/users"
 import { storeToRefs } from "pinia"
 import { computed } from "vue"
 import moment from "moment"
 import IconPoints from "@/elements/IconPoints.vue"
-import { useRoute } from "vue-router"
 
-const route = useRoute()
-const predictionStore = usePredictions()
 const racesStore = useRaces()
 const usersStore = useUsers()
-const { currentPrediction } = storeToRefs(predictionStore)
 const { currentRace } = storeToRefs(racesStore)
 const { currentPouleUser } = storeToRefs(usersStore)
 moment.locale("nl")
 
 const points = computed(
-	() =>
-		currentPrediction.value.qualificationScore +
-		currentPrediction.value.raceScore
+	() => currentPouleUser.value.points[currentRace.value.id]?.total || "-"
 )
 
 const imageSrc = computed(

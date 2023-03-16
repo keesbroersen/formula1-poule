@@ -77,23 +77,12 @@ const copyInviteLink = () => {
 }
 
 const users = computed(() => {
-	const users = currentPoule.value?.users.map((user) => {
-		return {
-			...user,
-			pointsTotal: getPoints(user.score),
-			lastPointsGained: user.score[user.score.length - 1] || 0
-		} as UserWithPoints
-	})
+	const users = currentPoule.value?.users
 
 	const previousSort = [...users]
 	const currentSort = [...users]
 
-	previousSort.sort((a, b) => {
-		const previousScoreA = a.pointsTotal - a.lastPointsGained
-		const previousScoreB = b.pointsTotal - b.lastPointsGained
-		return previousScoreB - previousScoreA
-	})
-
+	previousSort.sort((a, b) => b.previousPointsTotal - a.previousPointsTotal)
 	currentSort.sort((a, b) => b.pointsTotal - a.pointsTotal)
 
 	const result = currentSort.map((user, index) => {

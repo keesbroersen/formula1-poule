@@ -7,13 +7,12 @@ import {
 	updateDoc,
 	doc
 } from "firebase/firestore"
-import firebaseApp from "@/services/firebase"
+import { db } from "@/services/firebase"
 import { Driver } from "@/models/driver.model"
 import router from "@/services/router"
 import { useCollection } from "vuefire"
 import { computed, ComputedRef, ref, Ref } from "vue"
 
-const db = getFirestore(firebaseApp)
 const db_col = collection(db, "drivers")
 
 export const useDrivers = defineStore("drivers", () => {

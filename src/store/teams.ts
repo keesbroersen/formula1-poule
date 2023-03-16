@@ -1,20 +1,17 @@
 import { defineStore } from "pinia"
 import {
-	getFirestore,
 	collection,
-	getDocs,
 	addDoc,
 	deleteDoc,
 	updateDoc,
 	doc
 } from "firebase/firestore"
-import firebaseApp from "@/services/firebase"
 import { Team } from "@/models/team.model"
 import router from "@/services/router"
 import { useCollection } from "vuefire"
 import { ref, Ref, computed, ComputedRef } from "vue"
+import { db } from "@/services/firebase"
 
-const db = getFirestore(firebaseApp)
 const db_col = collection(db, "teams")
 
 export const useTeams = defineStore("teams", () => {

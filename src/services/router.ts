@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory } from "vue-router"
+import {
+	createRouter,
+	createWebHistory,
+	RouteLocationNormalized
+} from "vue-router"
 import { getCurrentUser } from "vuefire"
 import { useGeneral } from "@/store/general"
 import { useRaces } from "@/store/races"
@@ -7,6 +11,17 @@ import { useTeams } from "@/store/teams"
 import { useUsers } from "@/store/users"
 import { usePredictions } from "@/store/predictions"
 import { useResults } from "@/store/results"
+
+const setCurrentUserPoulePrediction = (to: RouteLocationNormalized) => {
+	const usersStore = useUsers()
+	usersStore.pouleUserSlug = to.params.slug as string
+	const raceStore = useRaces()
+	raceStore.setCurrentRace(to.params.raceSlug as string)
+	const predictionStore = usePredictions()
+	predictionStore.setCurrentPrediction()
+	const resultStore = useResults()
+	resultStore.setCurrentResult()
+}
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -54,27 +69,23 @@ const router = createRouter({
 			meta: {
 				requiresAuth: true
 			},
-			beforeEnter(to) {
-				const usersStore = useUsers()
-				usersStore.pouleUserSlug = to.params.slug as string
-				const raceStore = useRaces()
-				raceStore.setCurrentRace(to.params.raceSlug as string)
-				const predictionStore = usePredictions()
-				predictionStore.setCurrentPrediction()
-				const resultStore = useResults()
-				resultStore.setCurrentResult()
-			},
 			children: [
 				{
 					path: "qualification",
 					alias: "",
 					name: "poule_user_qualification",
-					component: () => import("../views/PredictionQualification.vue")
+					component: () => import("../views/PredictionQualification.vue"),
+					beforeEnter(to) {
+						setCurrentUserPoulePrediction(to)
+					}
 				},
 				{
 					path: "race",
 					name: "poule_user_race",
-					component: () => import("../views/PredictionRace.vue")
+					component: () => import("../views/PredictionRace.vue"),
+					beforeEnter(to) {
+						setCurrentUserPoulePrediction(to)
+					}
 				}
 			]
 		},
@@ -175,6 +186,8 @@ const router = createRouter({
 			beforeEnter(to) {
 				const raceStore = useRaces()
 				raceStore.setCurrentRace(to.params.slug as string)
+				const resultStore = useResults()
+				resultStore.setCurrentResult()
 			},
 			children: [
 				{

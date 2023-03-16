@@ -1,8 +1,18 @@
+export interface UserPoints {
+	[key: string]: {
+		qualification: number
+		race: number | null
+		total: number
+	}
+}
+
 export class User {
 	readonly id?: string
 	name: string = ""
 	slug: string = ""
-	score: Array<number> = []
+	points: UserPoints = {}
+	pointsTotal: number = 0
+	previousPointsTotal: number = 0
 	role: "admin" | "user" = "user"
 	driverChampion: string = ""
 	constructorsChampion: string = ""

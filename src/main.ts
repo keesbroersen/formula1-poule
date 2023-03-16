@@ -2,12 +2,7 @@ import { createApp } from "vue"
 import { createPinia } from "pinia"
 import router from "./services/router"
 import "./services/firebase"
-import {
-	VueFire,
-	VueFireAuth,
-	globalFirestoreOptions,
-	firestoreDefaultConverter
-} from "vuefire"
+import { VueFire, VueFireAuth, globalFirestoreOptions } from "vuefire"
 import { firebaseApp } from "./services/firebase"
 import App from "./App.vue"
 

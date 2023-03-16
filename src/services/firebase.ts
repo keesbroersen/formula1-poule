@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app"
-import { getAuth, onAuthStateChanged } from "firebase/auth"
-import { getFirestore, collection } from "firebase/firestore"
+import { getAuth, onAuthStateChanged, connectAuthEmulator } from "firebase/auth"
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore"
 // import { getAnalytics } from "firebase/analytics";
-// ... other firebase imports
 
 export const firebaseApp = initializeApp({
 	apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -16,18 +15,16 @@ export const firebaseApp = initializeApp({
 
 // const analytics = getAnalytics(firebaseApp);
 
-// used for the firestore refs
-const db = getFirestore(firebaseApp)
+export const db = getFirestore(firebaseApp)
+export const auth = getAuth()
 
-// here we can export reusable database references
-export const driversRef = collection(db, "drivers")
-export const predictionsRef = collection(db, "predictions")
-export const racesRef = collection(db, "races")
-export const teamsRef = collection(db, "teams")
+if (location.hostname === "localhost") {
+	connectFirestoreEmulator(db, "localhost", 8000)
+	connectAuthEmulator(auth, "http://127.0.0.1:9099")
+}
 
 export const getUser = () => {
 	return new Promise((resolve, reject) => {
-		const auth = getAuth()
 		const unsubscribe = onAuthStateChanged(
 			auth,
 			(userFirebase) => {

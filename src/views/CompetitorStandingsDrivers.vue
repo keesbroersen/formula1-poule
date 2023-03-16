@@ -12,7 +12,6 @@
 <script setup lang="ts">
 import { useDrivers } from "@/store/drivers"
 import { computed } from "vue"
-import { getPoints } from "@/composables/getters"
 import PouleListItem from "@/components/PouleListItem.vue"
 import { DriverWithPoints } from "@/models/driver.model"
 
@@ -22,8 +21,8 @@ const drivers = computed(() => {
 	const drivers = driversStore.drivers.map((driver) => {
 		return {
 			...driver,
-			pointsTotal: getPoints(driver.points),
-			lastPointsGained: driver.points[driver.points.length - 1]
+			pointsTotal: driver.pointsTotal,
+			lastPointsGained: driver.previousPointsTotal
 		} as DriverWithPoints
 	})
 

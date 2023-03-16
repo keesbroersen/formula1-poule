@@ -1,22 +1,20 @@
 import { defineStore } from "pinia"
 import {
-	getFirestore,
 	collection,
 	addDoc,
 	deleteDoc,
 	updateDoc,
 	doc
 } from "firebase/firestore"
-import firebaseApp from "@/services/firebase"
 import { Race } from "@/models/race.model"
 import moment from "moment"
 import router from "@/services/router"
-import { computed, ComputedRef, Ref, ref, watch } from "vue"
+import { computed, ComputedRef, Ref, ref } from "vue"
 import { useCollection } from "vuefire"
+import { db } from "@/services/firebase"
 
 type Filter = "upcoming" | "completed" | "all"
 
-const db = getFirestore(firebaseApp)
 const db_col = collection(db, "races")
 
 export const useRaces = defineStore("races", () => {

@@ -19,8 +19,8 @@ import { Poule } from "@/models/poule.model"
 import router from "@/services/router"
 import { computed, ref, ComputedRef } from "vue"
 import { User } from "@/models/user.model"
+import { db } from "@/services/firebase"
 
-const db = useFirestore()
 const db_col = collection(db, "poules")
 
 export const usePoules = defineStore("poules", () => {

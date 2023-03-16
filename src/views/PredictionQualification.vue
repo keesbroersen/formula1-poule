@@ -1,31 +1,27 @@
 <template>
 	<ResultList
-		v-if="
-			currentPrediction.qualificationScore ||
-			qualificationHasStarted ||
-			isOtherUser
-		"
+		v-if="points?.qualification || qualificationHasStarted || isOtherUser"
 	>
 		<PredictionResult
 			label="1"
 			type="qualification"
 			position="pos1"
 			:predicted="currentPrediction.qualification.pos1"
-			:show-prediction="qualificationHasStarted"
+			:show-prediction="showPrediction"
 		/>
 		<PredictionResult
 			label="2"
 			type="qualification"
 			position="pos2"
 			:predicted="currentPrediction.qualification.pos2"
-			:show-prediction="qualificationHasStarted"
+			:show-prediction="showPrediction"
 		/>
 		<PredictionResult
 			label="3"
 			type="qualification"
 			position="pos3"
 			:predicted="currentPrediction.qualification.pos3"
-			:show-prediction="qualificationHasStarted"
+			:show-prediction="showPrediction"
 		/>
 	</ResultList>
 	<div v-else class="list">
@@ -48,7 +44,12 @@
 			v-model="currentPrediction.qualification.pos3"
 		/>
 		<div class="list__footer">
-			<VueButton type="primary">Voorspel kwalificatie</VueButton>
+			<VueButton type="primary"
+				>Voorspel
+				{{
+					raceStore.currentRace.isSprintRace ? "Sprintrace" : "Kwalificatie"
+				}}</VueButton
+			>
 		</div>
 	</div>
 </template>
@@ -63,18 +64,33 @@ import { computed, onMounted, ref } from "vue"
 import { useRaces } from "@/store/races"
 import VueButton from "@/elements/VueButton.vue"
 import { useRoute } from "vue-router"
+import { useUsers } from "@/store/users"
 
 const route = useRoute()
 const predictionStore = usePredictions()
 const { currentPrediction } = storeToRefs(predictionStore)
 
 const raceStore = useRaces()
+const usersStore = useUsers()
+const { currentRace } = storeToRefs(raceStore)
+const { currentPouleUser } = storeToRefs(usersStore)
+
 const date = ref(new Date())
 const qualificationHasStarted = computed(
 	() => raceStore.currentRace.dates.qualification.toDate() < date.value
 )
 
+const points = computed(() =>
+	currentRace.value.id
+		? currentPouleUser.value.points[currentRace.value.id]
+		: null
+)
+
 const isOtherUser = computed(() => route.path.includes("poule"))
+
+const showPrediction = computed(
+	() => !!points.value?.race || qualificationHasStarted.value
+)
 
 onMounted(() => {
 	setInterval(() => (date.value = new Date()), 1000)
