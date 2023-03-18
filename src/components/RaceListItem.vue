@@ -11,7 +11,7 @@
 				{{ race.country }}<small>{{ race.circuit }}</small>
 			</p>
 			<p class="date" v-if="!points.total || $route.path.includes('admin')">
-				{{ dateTimeFormatted }}
+				{{ raceDateFormatted }}
 			</p>
 			<IconPoints v-else :points="points.total" />
 		</div>
@@ -29,14 +29,14 @@
 			/>
 			<IconCheck v-else-if="!points.qualification" :check="false" content="Q" />
 			<IconCheck v-if="raceFilled && !points.race" :check="true" content="R" />
-			<IconCheck v-else-if="!points" :check="false" content="R" />
-			<p class="next-session" v-html="nextSession"></p>
+			<IconCheck v-else-if="!points.race" :check="false" content="R" />
+			<p class="next-session" v-html="nextSessionText"></p>
 		</div>
 	</router-link>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import { ref, computed, ComputedRef } from "vue"
 import { Race, RaceDates } from "@/models/race.model"
 import CountryFlag from "@/elements/CountryFlag.vue"
 import moment from "moment"
@@ -67,13 +67,11 @@ const link = computed(() => {
 	return `races/${props.race.slug}`
 })
 
-const race = ref(props.race)
-const dateType = ref("race")
 const date = computed(() =>
-	race.value?.dates?.[dateType.value as keyof RaceDates]?.toDate()
+	props.race?.dates?.[nextSession.value as keyof RaceDates]?.toDate()
 )
-const dateTimeFormatted = computed(() => {
-	return date.value.toLocaleString("nl-NL", {
+const raceDateFormatted = computed(() => {
+	return props.race?.dates?.race.toDate().toLocaleString("nl-NL", {
 		hour: "numeric",
 		minute: "numeric",
 		month: "short",
@@ -82,15 +80,15 @@ const dateTimeFormatted = computed(() => {
 })
 
 const points = computed(() => {
-	if (!race.value.id || !currentPouleUser.value?.points[race.value.id])
+	if (!props.race.id || !currentPouleUser.value?.points[props.race.id])
 		return { qualification: 0, race: null, total: 0 }
-	return currentPouleUser.value?.points[race.value.id]
+	return currentPouleUser.value?.points[props.race.id]
 })
 
 const predictionStore = usePredictions()
 const thisPrediction = computed(() =>
 	predictionStore.predictions.find(
-		(prediction) => prediction.raceId === race.value.id
+		(prediction) => prediction.raceId === props.race.id
 	)
 )
 const qualificationFilled = computed(() => {
@@ -109,29 +107,34 @@ const dateUntilNow = computed(() => {
 })
 
 const nextSession = computed(() => {
-	const closestToNow = Object.keys(race.value.dates)
-		.filter(function (a) {
-			const sum =
-				Number(race.value.dates[a as keyof RaceDates].toDate()) -
-				Number(new Date())
-			return sum > 0
-		})
-		.shift()
+	const futureSessions = Object.keys(props.race.dates).filter(
+		(key) => props.race.dates[key as keyof RaceDates].toDate() > new Date()
+	)
+	if (!futureSessions.length) return
+	return futureSessions.reduce((a, b) => {
+		const aDiff =
+			props.race.dates[a as keyof RaceDates].toMillis() - new Date().getTime()
+		const bDiff =
+			props.race.dates[b as keyof RaceDates].toMillis() - new Date().getTime()
+		return aDiff < bDiff ? a : b
+	})
+})
 
+const nextSessionText = computed(() => {
 	if (points.value.race) {
 		return "Race <span>beëindigd</span>"
 	}
 
-	if (!closestToNow && !points.value.race) {
+	if (!nextSession.value && !points.value.race) {
 		return "Race <span>onderweg</span>"
 	}
 
-	const qualificationSessionType = race.value.isSprintRace
+	const qualificationSessionType = props.race.isSprintRace
 		? "sprintrace"
 		: "kwalificatie"
 
 	return `${
-		closestToNow === "qualification" ? qualificationSessionType : "race"
+		nextSession.value === "qualification" ? qualificationSessionType : "race"
 	} <span>${dateUntilNow.value}</span>`
 })
 </script>

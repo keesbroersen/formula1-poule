@@ -2,6 +2,7 @@
 	<router-link
 		v-if="props.user"
 		class="poule-list-item container"
+		:class="{ 'is-user': isUser }"
 		:to="`poule/${props.user.slug}`"
 	>
 		<p>{{ index + 1 }}</p>
@@ -29,12 +30,18 @@
 import { UserWithPoints } from "@/models/user.model"
 import { DriverWithPoints } from "@/models/driver.model"
 import { TeamWithPoints } from "@/models/team.model"
-import { computed } from "vue"
+import { computed, ComputedRef } from "vue"
+import { useUsers } from "@/store/users"
+const usersStore = useUsers()
 
 const props = defineProps<{
 	user: UserWithPoints | DriverWithPoints | TeamWithPoints
 	index: number
 }>()
+
+const isUser: ComputedRef<Boolean> = computed(
+	() => props.user.slug === usersStore.user?.slug
+)
 
 const pointsGained = computed(
 	() => props.user.pointsTotal - props.user.previousPointsTotal
@@ -49,6 +56,11 @@ const pointsGained = computed(
 	border-bottom: 1px solid var(--background-opacity);
 	padding: 0 16px;
 	height: 50px;
+
+	&.is-user {
+		background: var(--background-opacity);
+		border-bottom-color: transparent;
+	}
 }
 
 .color {

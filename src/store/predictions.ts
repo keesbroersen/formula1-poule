@@ -118,7 +118,6 @@ export const usePredictions = defineStore("predictions", () => {
 	}
 
 	const setCurrentPrediction = async () => {
-		console.log("setCurrentPrediction", { raceId: raceStore.currentRace.id })
 		await promise.value
 		const getPredictionByRaceId = predictions.value.find(
 			(prediction: Prediction) => prediction.raceId === raceStore.currentRace.id
