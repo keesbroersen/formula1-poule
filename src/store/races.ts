@@ -41,9 +41,14 @@ export const useRaces = defineStore("races", () => {
 	})
 
 	const completedRaces: ComputedRef<Race[]> = computed(() => {
-		return racesSorted.value.filter((race) =>
-			moment(race.dates.race.toDate()).isBefore(new Date(), "day")
-		)
+		return racesSorted.value
+			.filter((race) =>
+				moment(race.dates.race.toDate()).isBefore(new Date(), "day")
+			)
+			.sort(
+				(a, b) =>
+					b.dates.qualification.toMillis() - a.dates.qualification.toMillis()
+			)
 	})
 
 	const filteredRaces: ComputedRef<Race[]> = computed(() => {

@@ -18,10 +18,10 @@ export const firebaseApp = initializeApp({
 export const db = getFirestore(firebaseApp)
 export const auth = getAuth()
 
-if (location.hostname === "localhost") {
-	connectFirestoreEmulator(db, "localhost", 8000)
-	connectAuthEmulator(auth, "http://127.0.0.1:9099")
-}
+// if (location.hostname === "localhost") {
+// 	connectFirestoreEmulator(db, "localhost", 8000)
+// 	connectAuthEmulator(auth, "http://127.0.0.1:9099")
+// }
 
 export const getUser = () => {
 	return new Promise((resolve, reject) => {

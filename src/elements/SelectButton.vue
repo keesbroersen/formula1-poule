@@ -1,13 +1,15 @@
 <template>
-	<select class="select" v-model="selected">
-		<option
-			v-for="option in props.options"
-			:key="option.value"
-			:value="option.value"
-		>
-			{{ option.label }}
-		</option>
-	</select>
+	<div class="select-button">
+		<select class="select" v-model="selected">
+			<option
+				v-for="option in props.options"
+				:key="option.value"
+				:value="option.value"
+			>
+				{{ option.label }}
+			</option>
+		</select>
+	</div>
 </template>
 
 <script setup lang="ts">

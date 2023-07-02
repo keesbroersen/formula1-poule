@@ -77,7 +77,7 @@ const copyInviteLink = () => {
 }
 
 const users = computed(() => {
-	const users = currentPoule.value?.users
+	const users = currentPoule.value?.users.filter(x => x);
 
 	const previousSort = [...users]
 	const currentSort = [...users]

@@ -10,7 +10,7 @@
 			<p class="title">
 				{{ race.country }}<small>{{ race.circuit }}</small>
 			</p>
-			<p class="date" v-if="!points.total || $route.path.includes('admin')">
+			<p class="date" v-if="!raceHasPassed || $route.path.includes('admin')">
 				{{ raceDateFormatted }}
 			</p>
 			<IconPoints v-else :points="points.total" />
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, ComputedRef } from "vue"
+import { computed } from "vue"
 import { Race, RaceDates } from "@/models/race.model"
 import CountryFlag from "@/elements/CountryFlag.vue"
 import moment from "moment"
@@ -70,6 +70,11 @@ const link = computed(() => {
 const date = computed(() =>
 	props.race?.dates?.[nextSession.value as keyof RaceDates]?.toDate()
 )
+
+const raceHasPassed = computed(
+	() => props.race?.dates?.race?.toDate() < new Date()
+)
+
 const raceDateFormatted = computed(() => {
 	return props.race?.dates?.race.toDate().toLocaleString("nl-NL", {
 		hour: "numeric",
