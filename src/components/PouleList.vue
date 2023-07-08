@@ -77,10 +77,10 @@ const copyInviteLink = () => {
 }
 
 const users = computed(() => {
-	const users = currentPoule.value?.users.filter(x => x);
+	const pouleUsers = currentPoule.value?.users.filter(x => x && !isNaN(x.pointsTotal));
 
-	const previousSort = [...users]
-	const currentSort = [...users]
+	const previousSort = [...pouleUsers]
+	const currentSort = [...pouleUsers]
 
 	previousSort.sort((a, b) => b.previousPointsTotal - a.previousPointsTotal)
 	currentSort.sort((a, b) => b.pointsTotal - a.pointsTotal)
